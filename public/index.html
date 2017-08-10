@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Wheel</title>
+        <meta charset="utf-8">
+        <script src="wheel.js"></script>
+        <script src="gameController.js"></script>
+        <script src="player.js"></script>
+        <style>
+        </style>
+        <script>
+            // kick things off
+            window.onload = initialize;
+            var gameController;
+            
+            function initialize()
+            {
+                // order is important because there is dependency
+                createWheel();
+                createGameController();
+            }
+            
+            function createGameController()
+            {
+                var player0 = new Player("A");
+                var player1 = new Player("B");
+                var player2 = new Player("C");
+                var playerList = [player0, player1, player2];
+                
+                
+                gameController = new GameController(wheel, playerList);
+                gameController.startGame();
+            }
+            
+            function createWheel() {
+                //
+                // create a Wheel.
+                // 
+                wheel = new Wheel("wheel",
+                        {
+                            includeLabels: true,
+                            data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+                            labels: ["Category 1", "Bankrupt", "Category 2", "Lose Turn",
+                                "Category 3", "Free Turn", "Category 4", "Spin Again",
+                                "Category 5", "Player's Choice", "Category 6", "Opponents' Choice"],
+                            colors: [
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"],
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"],
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"],
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"]
+                            ]
+                        }, gameController
+                );
+                //
+                // nothing appears until you call draw().
+                //
+                wheel.draw(0, false);
+                /*
+                 * If you want to draw the labels separately, you can set
+                 * includeLabels to false, and call drawLabel() for each
+                 * pie chart segment.
+                 *
+                 for (var i = 0; i < pieChart.labels.length; i++) {
+                 pieChart.drawLabel(i);
+                 }
+                 */
+                /*
+                 * If you want to select a segment to highight it, you can
+                 * call select() for a given segment. Here's a little snippet
+                 * that animates selecting each segment.
+                 *
+                 var segment = 0;
+                 function nextSegment() {
+                 pieChart.select(segment);
+                 segment++;
+                 if (segment < pieChart.data.length) {
+                 setTimeout(nextSegment, 1000);
+                 }
+                 }
+                 setTimeout(nextSegment, 1000);
+                 */
+            }
+        </script>
+    </head>
+    <body>
+
+        <table border="1">
+            <tr>
+                <td colspan="3">
+                    <table width="100%" border="1">
+                        <tr>
+                            <td width="100%" align="left">
+                                Timer: <span id="timer">0</span><br/>
+                                Spins Left: <span id="spinsLeft"></span><br/>
+                                Player <span id="currentPlayerName"></span>'s turn 
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <canvas id="wheel" width="400" height="400">
+                    </canvas>
+                </td>
+                <td>
+                    <br/>
+                    <img alt src="img/pointer2.png" style="width: 26px;height: 13px"/>
+                </td> 
+                <td width="400" align="center">
+                    Jeopardy Board
+                </td> 
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Category: <span id="category"></span>
+                    <br/>
+                    Question: <span id="question"></span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table width="100%" border="1">
+                        <tr>
+                            <td>
+                                <span id="player0Name">Player 0</span><br/>
+                                Score: <span id="player0Score">0</span><br/>
+                                Free spin tokens: <span id="player0Tokens">0</span><br/>
+                                <button id="player0Spin" onclick="wheel.spin();">Spin</button>
+                            </td>
+                            <td>
+                                <span id="player1Name">Player 1</span><br/>
+                                Score: <span id="player1Score">0</span><br/>
+                                Free spin tokens: <span id="player1Tokens">0</span><br/>
+                                <button id="player1Spin" onclick="wheel.spin();" disabled>Spin</button>
+                            </td> 
+                            <td>
+                                <span id="player2Name">Player 2</span><br/>
+                                Score: <span id="player2Score">0</span><br/>
+                                Free spin tokens: <span id="player2Tokens">0</span><br/>
+                                <button id="player2Spin" onclick="wheel.spin();" disabled>Spin</button>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
