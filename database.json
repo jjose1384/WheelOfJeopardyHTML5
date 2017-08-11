@@ -8,7 +8,7 @@
                     "answer": "Neptune", 
                     "number": "question5", 
                     "question": "This panet is the coolest in our solar system.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Uranus", 
                         "Pluto", 
                         "Saturn", 
@@ -30,7 +30,7 @@
                     "answer": "Earth", 
                     "number": "question4", 
                     "question": "This planet is three quarters covered by water.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Mars", 
                         "Venus", 
                         "Sun", 
@@ -51,7 +51,7 @@
                     "answer": "Mercury", 
                     "number": "question1", 
                     "question": "This is the smallest planet in our solar system.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Venus", 
                         "Jupiter", 
                         "Saturn", 
@@ -82,7 +82,7 @@
                     "answer": "Venus", 
                     "number": "question3", 
                     "question": "This planet is the hottest in our solar system.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Uranus", 
                         "Pluto", 
                         "Saturn", 
@@ -99,7 +99,7 @@
                     "answer": "Neptune", 
                     "number": "question2", 
                     "question": "This planet is the farthest from our sun in our solar system.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Uranus", 
                         "Pluto", 
                         "Saturn", 
@@ -138,7 +138,7 @@
                     "answer": "Juniper", 
                     "number": "question5", 
                     "question": "Gin derives its distinguishing flavor from this type of berry.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Vodka", 
                         "Triple sec", 
                         "Tequila", 
@@ -166,7 +166,7 @@
                     "answer": "Guinness", 
                     "number": "question4", 
                     "question": "St James Gate Brewery, home to this beer, was originally leased to its creator for 45 Irish Pounds per year for 9,000 years.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Stout", 
                         "Beer", 
                         "Ale", 
@@ -196,7 +196,7 @@
                     "answer": "Manhattan", 
                     "number": "question1", 
                     "question": "Named after a New York borough, this drink is traditionally made with rye whiskey, bitters, and sweet vermouth.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "New York City", 
                         "New York", 
                         "United States of America", 
@@ -224,7 +224,7 @@
                     "answer": "Long Island Iced Tea", 
                     "number": "question3", 
                     "question": "A mixture of gin, vodka, rum, tequila, sweet and sour, and Coke, this drink does not actually contain the beverage listed in its name.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Vodka", 
                         "Triple sec", 
                         "Tequila", 
@@ -252,7 +252,7 @@
                     "answer": "Champagne", 
                     "number": "question2", 
                     "question": "Containing roughly 49 million bubbles, the pressure in a bottle of this beverage is approximately 90 pounds per square inch.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Wine", 
                         "Sparkling wine", 
                         "Whisky", 
@@ -287,7 +287,7 @@
                     "answer": "Real Madrid F.C.", 
                     "number": "question5", 
                     "question": "Led by Christano Ronaldo, this Spanish football team won the UEFA Champions League tournament in 2017.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "FC Barcelona", 
                         "Manchester United F.C.", 
                         "Juventus F.C.", 
@@ -318,7 +318,7 @@
                     "answer": "San Antonio Spurs", 
                     "number": "question4", 
                     "question": "Boasting players such as Tim Duncan and Manu Ginobili, this NBA franchise has the highest all time winning percentage in the NBA.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Cleveland Cavaliers", 
                         "Golden State Warriors", 
                         "Oklahoma City Thunder", 
@@ -349,7 +349,7 @@
                     "answer": "Chicago Cubs", 
                     "number": "question1", 
                     "question": "Breaking the \u201cCurse of the Billy Goat,\u201d this national league baseball team won the World Series in 2016.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Chicago White Sox", 
                         "St. Louis Cardinals", 
                         "Milwaukee Brewers", 
@@ -380,7 +380,7 @@
                     "answer": "Edmonton Oilers", 
                     "number": "question3", 
                     "question": "Widely considered the greatest hockey player of all time, Wayne Gretsky began his career in Edmonton, playing for this team.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Calgary Flames", 
                         "Montreal Canadiens", 
                         "Vancouver Canucks", 
@@ -411,7 +411,7 @@
                     "answer": "Oakland Raiders", 
                     "number": "question2", 
                     "question": "This NFL team plans to relocate to Las Vegas, Nevada in 2019.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Denver Broncos", 
                         "San Francisco 49ers", 
                         "New England Patriots", 
@@ -448,7 +448,7 @@
                     "answer": "Mercury", 
                     "number": "question5", 
                     "question": "This metal is liquid at room temperature.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Venus", 
                         "Jupiter", 
                         "Saturn", 
@@ -479,7 +479,7 @@
                     "answer": "Uranium", 
                     "number": "question4", 
                     "question": "The 235 isotope of this element is used to generate energy for nuclear power plants.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Plutonium", 
                         "Metal", 
                         "Thorium", 
@@ -503,7 +503,7 @@
                     "answer": "Neon", 
                     "number": "question1", 
                     "question": "This gas is used extensively in exterior lighting, and not just in Las Vegas.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Argon", 
                         "Krypton", 
                         "Xenon", 
@@ -523,7 +523,7 @@
                     "answer": "Silver", 
                     "number": "question3", 
                     "question": "Upon discovery of the Comstock Load in 1859, people flocked to Nevada to mine for this metal, abbreviated Ag.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Gold", 
                         "Zinc", 
                         "Copper", 
@@ -541,7 +541,7 @@
                     "answer": "Potassium", 
                     "number": "question2", 
                     "question": "Abbreviated K, this element can be found in bananas and helps reduce the occurrence of muscle cramps.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Sodium", 
                         "Magnesium", 
                         "Iron", 
@@ -565,7 +565,7 @@
                     "answer": "Steve Jobs", 
                     "number": "question5", 
                     "question": "This quote was said by a famous inventor, \u201cStay hungry, stay foolish.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Bill Gates", 
                         "Steve Wozniak", 
                         "Laurene Powell", 
@@ -595,7 +595,7 @@
                     "answer": "Abert Einstein", 
                     "number": "question4", 
                     "question": "This quote was said by a famous inventor, \u201cCreativity is intelligence having fun.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Elsa Einstein", 
                         "Eduard Einstein", 
                         "Isaac Newton", 
@@ -624,7 +624,7 @@
                     "answer": "Henry Ford", 
                     "number": "question1", 
                     "question": "This quote was said by a famous inventor, \u201cIf I had asked people what they wanted, they would have said faster horses.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Gerald Ford", 
                         "Thomas Edison", 
                         "Charles Lindbergh", 
@@ -655,7 +655,7 @@
                     "answer": "Thomas Edison", 
                     "number": "question3", 
                     "question": "This quote was said by a famous inventor, \u201cI have not failed. I've just found 10,000 ways that won't work.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Nikola Tesla", 
                         "Alexander Graham Bell", 
                         "Albert Einstein", 
@@ -686,7 +686,7 @@
                     "answer": "Nikola Tesla", 
                     "number": "question2", 
                     "question": "This quote was said by a famous inventor, \u201cThe present is theirs; the future, for which I really worked, is mine.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Thomas Edison", 
                         "Albert Einstein", 
                         "Elon Musk", 
@@ -722,7 +722,7 @@
                     "answer": "Star Trek", 
                     "number": "question5", 
                     "question": "The first interracial kiss on American Network Television was aired on this sci-fi series in 1968.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Lost in Space", 
                         "Battlestar Galactica", 
                         "Babylon 5", 
@@ -739,7 +739,7 @@
                     "answer": "I Love Lucy", 
                     "number": "question4", 
                     "question": "Starring Lucille Ball and Desi Arnaz, this tv show was voted the \u201cBest TV Show of all Time\u201d in a poll done by ABC News.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "The Lucy Show", 
                         "The Lucy-Desi Comedy Hour", 
                         "Here's Lucy", 
@@ -755,7 +755,7 @@
                     "answer": "The Simpsons", 
                     "number": "question1", 
                     "question": "The longest running animated series in US history is this show, having aired over 500 episodes.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Family Guy", 
                         "Futurama", 
                         "South Park", 
@@ -767,7 +767,7 @@
                     "answer": "Larry King", 
                     "number": "question3", 
                     "question": "This talk show host headlined a late night show on CNN from 1985-2010, winning two Peabody Awards and 10 Cable ACE Awards.", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Johnny Carson", 
                         "Shawn King", 
                         "Steven Spielberg", 
@@ -795,7 +795,7 @@
                     "answer": "Game of Thrones", 
                     "number": "question2", 
                     "question": "This HBO show is an adaptation of George R.R. Martin\u2019s novel series titled \u201cA Song of Ice and Fire.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Westworld", 
                         "The Sopranos", 
                         "The Wire", 
@@ -818,7 +818,7 @@
                     "answer": "Wonder Woman", 
                     "number": "question5", 
                     "question": "This Amazonian woman can make you tell the truth with the lasso of truth", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Poision Ivy", 
                         "Batgirl", 
                         "Catwoman", 
@@ -832,7 +832,7 @@
                     "answer": "Hulk", 
                     "number": "question4", 
                     "question": "You better not make this green monster angry", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Iron Man", 
                         "Spider-Man", 
                         "Captain America", 
@@ -863,7 +863,7 @@
                     "answer": "Iron Man", 
                     "number": "question1", 
                     "question": "This man of metal from Marvel is known for his high tech suit", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Hulk", 
                         "Spider-Man", 
                         "Thor", 
@@ -879,7 +879,7 @@
                     "answer": "Joker", 
                     "number": "question3", 
                     "question": "This clown is known for asking \u201cWhy so serious?\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Harley Quinn", 
                         "Batman", 
                         "Superman", 
@@ -910,7 +910,7 @@
                     "answer": "Batman", 
                     "number": "question2", 
                     "question": "This dark knight is based in Gotham City", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Superman", 
                         "Joker", 
                         "Spider-Man", 
@@ -947,7 +947,7 @@
                     "answer": "Lay's", 
                     "number": "question5", 
                     "question": "This company slogan is, \u201cBetcha Can't Eat Just One\u201d ", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Ritz", 
                         "Doritos", 
                         "Fritos", 
@@ -963,7 +963,7 @@
                     "answer": "BMW", 
                     "number": "question4", 
                     "question": "This company slogan is, \u201cThe Ultimate Driving Machine\u201d ", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Mercedes-Benz", 
                         "Lexus", 
                         "Audi", 
@@ -994,7 +994,7 @@
                     "answer": "Nike", 
                     "number": "question1", 
                     "question": "This company slogan is, \u201cJust do it\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Adidas", 
                         "Under Armor", 
                         "Reebok", 
@@ -1011,7 +1011,7 @@
                     "answer": "MasterCard", 
                     "number": "question3", 
                     "question": "This company slogan is, \u201cThere are some things money can't buy. For everything else, there's MasterCard.\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Visa", 
                         "American Express", 
                         "Capital One", 
@@ -1042,7 +1042,7 @@
                     "answer": "Apple", 
                     "number": "question2", 
                     "question": "This company slogan is, \u201cThink Different\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Federal Bureau of Investigation", 
                         "Google", 
                         "Microsoft Corporation", 
@@ -1079,7 +1079,7 @@
                     "answer": "Martin Luther King Jr", 
                     "number": "question5", 
                     "question": "This man made a famous speech titled \u201cI have a dream\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Malcolm X", 
                         "Rosa Parks", 
                         "Mahatma Gandhi", 
@@ -1110,7 +1110,7 @@
                     "answer": "World War I", 
                     "number": "question4", 
                     "question": "This war was known as \u201cThe Great War\u201d", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "World War II", 
                         "Cold War", 
                         "American Civil War", 
@@ -1141,7 +1141,7 @@
                     "answer": "George Washington", 
                     "number": "question1", 
                     "question": "This man was the first president of the USA", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Gerald Ford", 
                         "Benedict Arnold", 
                         "Thomas Jefferson", 
@@ -1171,7 +1171,7 @@
                     "answer": "Plymouth", 
                     "number": "question3", 
                     "question": "The pilgrims landed on this rock when they first came to America", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Boston", 
                         "Duxbury", 
                         "Jamestown", 
@@ -1202,7 +1202,7 @@
                     "answer": "Louisiana Purchase", 
                     "number": "question2", 
                     "question": "This purchase from the French in 1803 doubles the size of the United States", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "West Florida", 
                         "Red River", 
                         "Gadsden Purchase", 
@@ -1225,7 +1225,7 @@
                     "answer": "Chicken", 
                     "number": "question5", 
                     "question": "This meat is the leading source of salmonella poisoning", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Pork", 
                         "Turkey", 
                         "Steak", 
@@ -1239,7 +1239,7 @@
                     "answer": "Flambe", 
                     "number": "question4", 
                     "question": "This cooking procedure includes adding alchohol to a hot pan to create flames", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Grill", 
                         "Pan-Fry", 
                         "Deep-Fry", 
@@ -1257,7 +1257,7 @@
                     "answer": "Wine", 
                     "number": "question1", 
                     "question": "Jesus was said to turn water into this", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Red Wine", 
                         "Beer", 
                         "White wine", 
@@ -1287,7 +1287,7 @@
                     "answer": "Trix", 
                     "number": "question3", 
                     "question": "This cereal is only for kids, no silly rabbits!", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Honey Nut Cheerios", 
                         "Frosted Flakes", 
                         "Honey Bunches of Oats", 
@@ -1306,7 +1306,7 @@
                     "answer": "hamburger", 
                     "number": "question2", 
                     "question": "Mcdonalds sells 75 of these every second", 
-                    "wrong_answer": [
+                    "wrong_answers": [
                         "Pizza", 
                         "French fries", 
                         "Sandwich", 
