@@ -160,33 +160,30 @@ class TestJsonDatabase(unittest.TestCase):
                 # make sure it has at least 5 questions
                 self.assertGreaterEqual(len(questions), 5)
 
-                for question in questions:
+                for question_data in questions:
                     #make sure question has the question, answer, and wrong_answers
-                    self.assertTrue('question' in question)
-                    self.assertTrue('answer' in question)
-                    self.assertTrue('wrong_answers' in question)
-                    
-            #get categories number for double_jeopardy
-            double_jeopardy_categories = self.database_double_jeopardy.keys()
-            for category_number in double_jeopardy_categories:
-                #check has at least 5 questions in each category
-                number_questions = len(self.database_double_jeopardy[category_number])
-                print(number_questions)
-            # get categories number for single_jeopardy
-            single_jeopardy_categories = self.database_single_jeopardy.keys()
-            for category_number in single_jeopardy_categories:
-                # check has at least 5 questions in each category
-                number_questions = len(self.database_single_jeopardy[category_number])
-                print(number_questions)
+                    self.assertTrue('question' in question_data)
+                    self.assertTrue('answer' in question_data)
+                    self.assertTrue('wrong_answers' in question_data)
+
+                    #make sure question, answer, wrong_answers are not empty
+                    question_text = question_data['question']
+                    question_answer = question_data['answer']
+                    wrong_answers = question_data['wrong_answers']
+                    self.assertIsNotNone(question_text)
+                    self.assertIsNotNone(question_answer)
+                    self.assertIsNotNone(wrong_answers)
+                    #make sure there is at least 4 wrong answers to have 4 multiple choice
+                    self.assertGreaterEqual(len(wrong_answers), 4)
 
 
     def test_has_atleast_10_category(self):
         #make sure database has at least 10 category
-        double_jeopardy_categories = self.database_double_jeopardy.keys()
-        number_double_jeopardy_categories = len(double_jeopardy_categories)
-        single_jeopardy_categories = self.database_single_jeopardy.keys()
-        number_single_jeopardy_categories = len(single_jeopardy_categories)
-        self.assertGreaterEqual(10, number_double_jeopardy_categories + number_single_jeopardy_categories)
+        category_count = 0
+        for rounds in self.database.keys():
+            category_count += len(self.database[rounds])
+
+        self.assertGreaterEqual(category_count,10)
 
     def test_split(self):
         s = 'hello world'
