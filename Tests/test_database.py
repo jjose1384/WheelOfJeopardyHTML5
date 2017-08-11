@@ -3,6 +3,20 @@ import os
 import json
 from difflib import SequenceMatcher
 
+#return probability a and b are similar
+#used for filtering out wrong_answers that are similar to the answer
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+#get only letters of word
+#used with similar to find the probability that words are similar to each other
+def letters(input):
+    valids = []
+    for character in input.lower():
+        if character.isalpha():
+            valids.append(character)
+    return ''.join(valids)
+
 class TestJsonDatabase(unittest.TestCase):
 
     #setup for test, run before every test
@@ -176,6 +190,26 @@ class TestJsonDatabase(unittest.TestCase):
                     #make sure there is at least 4 wrong answers to have 4 multiple choice
                     self.assertGreaterEqual(len(wrong_answers), 4)
 
+                    #get the lowercase of question answer and remove any "the" from the word
+                    # to get a higher probability of matching
+                    question_answer = question_answer.lower()
+                    question_answer.replace('the','')
+
+                    #get only the letters, remove spaces
+                    answer_check = letters(question_answer)
+
+                    for wrong_answer in wrong_answers:
+                        #get the wrong answer to lowercase
+                        wrong_answer = wrong_answer.lower()
+                        wrong_answer.replace('the','')
+                        wrong_answer_check = letters(wrong_answer)
+
+                        #check the probability that the answer and wrong answer are similar
+                        similarity = similar(answer_check, wrong_answer_check)
+                        if similarity >= 0.8:
+                            print(answer_check)
+                            print(wrong_answer)
+                        self.assertLessEqual(similarity,0.8)
 
     def test_has_atleast_10_category(self):
         #make sure database has at least 10 category
