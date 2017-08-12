@@ -5,8 +5,16 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
 
-class TestBlackboxGame(unittest.TestCase):
 
+'''
+    The TestBlackboxGame class is the base and used for setup
+    
+    Then testsuite is used because Unittest execute the test cases in alphabetical order
+    Testsuite can specify the test cases to run in a certain order
+'''
+
+#basic test suite. Creates a webdriver.
+class TestBlackboxGame(unittest.TestCase):
     #ran once at the start of testsuite
     @classmethod
     def setUpClass(cls):
@@ -20,7 +28,7 @@ class TestBlackboxGame(unittest.TestCase):
     #ran once after testing is done
     @classmethod
     def tearDownClass(cls):
-        pass
+        cls.driver.quit()
 
     #setUp, ran once before each test
     def setUp(self):
@@ -30,16 +38,114 @@ class TestBlackboxGame(unittest.TestCase):
     def tearDown(self):
         pass
 
-    #open the game test for title == 'Wheel'
-    def test_open_game(self):
+
+# test that time is set to zero, spin left = 50, player0Spin is active
+class TestOpenNewGame(TestBlackboxGame):
+    def test_game_started(self):
         print('Visiting game at ' + self.game_path)
         self.driver.get(self.game_path)
-        print(self.driver.title)
+        #check if wheel is in title
         self.assertTrue('Wheel' == self.driver.title)
-        self.driver.quit()
 
-    #open chrome, visit bing.com and search for "cheese!", check for cheese in title of result page, close chrome
-    def test_selenium_start(self):
+    #get Timer value
+    def test_timer_zero(self):
+        timer_value = self.driver.find_element_by_xpath('//*[@id="timer"]').text
+        #check if Timer = zero
+        self.assertEqual(int(timer_value),0)
+
+    #check that the spin left is 50
+    def test_spin_left_50(self):
+        spins_left_value = self.driver.find_element_by_xpath('//*[@id="spinsLeft"]').text
+        #check spins left is 50
+        self.assertEqual(int(spins_left_value),50)
+
+    #check player scores are zero
+    def test_player_values_zero(self):
+        '''
+        player0Score = self.driver.find_element_by_xpath('//*[@id="player0Score"]')
+        player1Score = self.driver.find_element_by_xpath('//*[@id="player1Score"]')
+        player2Score = self.driver.find_element_by_xpath('//*[@id="player2Score"]')
+        #check player score exists
+        self.assertIsNotNone(player0Score)
+        self.assertIsNotNone(player1Score)
+        self.assertIsNotNone(player2Score)
+        player0Score_value = int(player0Score.text)
+        player1Score_value = int(player1Score.text)
+        player2Score_value = int(player2Score.text)
+        #check player scores all equal to zero
+        self.assertEqual(player0Score_value, 0)
+        self.assertEqual(player1Score_value, 0)
+        self.assertEqual(player2Score_value, 0)
+        '''
+
+        #loop does the checks in the above
+        for i in range(0,3):
+            xpath = '//*[@id="player{0}Score"]'.format(i)
+            playerScore = self.driver.find_element_by_xpath(xpath)
+            self.assertIsNotNone(playerScore)
+            playerScore_value = int(playerScore.text)
+            self.assertEqual(playerScore_value, 0)
+
+
+    #check player free spin token are zero
+    def test_player_token_zero(self):
+        for i in range(0,3):
+            xpath = '//*[@id="player{0}Tokens"]'.format(i)
+            playerScore = self.driver.find_element_by_xpath(xpath)
+            self.assertIsNotNone(playerScore)
+            playerScore_value = int(playerScore.text)
+            self.assertEqual(playerScore_value, 0)
+
+    def test_player0_turn(self):
+        '''
+        player0Spin = self.driver.find_element_by_xpath('// *[ @ id = "player0Spin"]')
+        player1Spin = self.driver.find_element_by_xpath('// *[ @ id = "player1Spin"]')
+        player2Spin = self.driver.find_element_by_xpath('// *[ @ id = "player2Spin"]')
+
+        #make sure player spin button exists
+        self.assertIsNotNone(player0Spin)
+        self.assertIsNotNone(player1Spin)
+        self.assertIsNotNone(player2Spin)
+        # player0Spin_attruibute = player0Spin.get_attribute('innerHTML')
+        # player1Spin_attruibute = player1Spin.get_attribute('innerHTML')
+        # player2Spin_attruibute = player2Spin.get_attribute('innerHTML')
+
+        #make sure only player0Spin is enabled
+        self.assertTrue(player0Spin.is_enabled())
+        self.assertFalse(player1Spin.is_enabled())
+        self.assertFalse(player2Spin.is_enabled())
+        '''
+
+        player0Spin = self.driver.find_element_by_xpath('// *[ @ id = "player0Spin"]')
+        self.assertIsNotNone(player0Spin)
+        self.assertTrue(player0Spin.is_enabled())
+
+        #loop version of the commited code above
+        for i in range(1,3):
+            xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
+            playerSpin = self.driver.find_element_by_xpath(xpath)
+            self.assertIsNotNone(playerSpin)
+            self.assertFalse(playerSpin.is_enabled())
+
+def testsutie_TestOpenNewGame():
+    suite = unittest.TestSuite()
+    suite.addTest(TestOpenNewGame('test_game_started'))
+    suite.addTest(TestOpenNewGame('test_timer_zero'))
+    suite.addTest(TestOpenNewGame('test_spin_left_50'))
+    suite.addTest(TestOpenNewGame('test_player_values_zero'))
+    suite.addTest(TestOpenNewGame('test_player0_turn'))
+    return suite
+
+class TestFirstPlayer(TestBlackboxGame):
+    def test_player_spinable(self):
+        #make sure there is 3 spinner buttons, player0Spin, player1Spin, player2Spin
+        for player_number in range(0,3):
+            spin_id = 'player{0}Spin'.format(player_number)
+            assert(self.driver.find_element_by_id(spin_id))
+
+# open chrome, visit bing.com and search for "cheese!", check for cheese in title of result page, close chrome
+class TestSeleniumOpenBing(TestBlackboxGame):
+    def test_selenium_start_with_bing(self):
         # go to the google home page
         self.driver.get("http://www.bing.com")
 
@@ -55,22 +161,11 @@ class TestBlackboxGame(unittest.TestCase):
         # submit the form (although google automatically searches now without submitting)
         inputElement.submit()
 
-        # we have to wait for the page to refresh, the last thing that seems to be updated is the title
-        # WebDriverWait(driver, 10).until(EC.title_contains("cheese!"))
-
         # You should see "cheese! - Google Search"
         self.assertTrue('cheese' in self.driver.title)
-
-        self.driver.quit()
-
-def testsuite_open_game():
-    suite = unittest.TestSuite()
-    suite.addTest(TestBlackboxGame('test_open_game'))
-    return suite
 
 if __name__ == '__main__':
     # unittest.main()
     # loader = unittest.TestLoader()
-    suite = unittest.TestSuite()
     runner = unittest.TextTestRunner(failfast=True)
-    runner.run(testsuite_open_game())
+    runner.run(testsutie_TestOpenNewGame())
