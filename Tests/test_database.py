@@ -80,26 +80,6 @@ class TestJsonDatabase(unittest.TestCase):
         else:
             self.assertTrue(os.path.exists(self.database_path))
 
-    # #check if database file exist a directory up
-    # def test_database_exist(self):
-    #     #test correct database path
-    #     self.assertTrue(os.path.exists(self.database_path))
-    #     # #test incorrect database path
-    #     # self.assertFalse(os.path.exists(self.database_path + 'wrong'))
-    #
-    # #checking database is a valid json format
-    # def test_read_database(self):
-    #     with open(self.database_path) as fp:
-    #         self.assertRaises(json.load(fp))
-    #
-    # #check if database has jeopardy_rounds:
-    # def test_has_category(self):
-    #     with open(self.database_path) as fp:
-    #         database = json.load(fp)
-    #     self.assertTrue('Category' in database.keys())
-    #     self.assertTrue('doubleJeopardy' in database['Category'].keys())
-    #     self.assertTrue('singleJeopardy' in database['Category'].keys())
-
     #check if database has at least one doubleJeopardy and check it has category_number, category_name, and questions
     def test_has_doubleJeopardy_categories(self):
         #make sure doubleJeopardy has at least one category in it and
@@ -116,7 +96,6 @@ class TestJsonDatabase(unittest.TestCase):
             #make sure the category has questions
             self.assertIsNotNone(double_category['questions'])
 
-
     # check if database has at least one singleJeopardy and check it has category_number, category_name, and questions
     def test_has_singleJeopardy_categories(self):
         # make sure doubleJeopardy has at least one category in it and
@@ -132,7 +111,6 @@ class TestJsonDatabase(unittest.TestCase):
             self.assertIsNotNone(single_category['category_name'])
             # make sure the category has questions
             self.assertIsNotNone(single_category['questions'])
-
 
     #check that all categories has at least 5 questions, each question has the question, answer, and 4+ wrong answers
     def test_has_all_questions_has_answer_and_wrong_answers(self):
