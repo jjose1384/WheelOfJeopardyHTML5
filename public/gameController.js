@@ -41,6 +41,8 @@ GameController.prototype = {
         
         var outputId = "timer";
         var x = setInterval(function () {
+			//disable spin until the question is answered or time is update
+			self.disableSpinButtons()
             // Display the result in the element with outputId
             document.getElementById(outputId).innerHTML = self.gameTimer;
             // If the count down is finished, write some text 
@@ -50,8 +52,10 @@ GameController.prototype = {
                 // play timeup sound
                 var audio = new Audio('sound/timeUp.mp3');
                 audio.play();
+				
+				//enable the currentPlayer to spin
+				self.enableSpinButton(self.currentPlayerIndex)
             }
-
             self.gameTimer--;
         }, 1000);
     },
