@@ -6,7 +6,15 @@
         <script src="wheel.js"></script>
         <script src="gameController.js"></script>
         <script src="player.js"></script>
-        <style>
+        <script src="category.js"></script>
+        <script src="question.js"></script>
+        <script src="board.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style >
         </style>
         <script>
             // kick things off
@@ -15,22 +23,223 @@
             
             function initialize()
             {
-                // order is important because there is dependency
-                createWheel();
-                createGameController();
+                createGameControllerR1();
             }
             
-            function createGameController()
-            {
+            function createGameControllerR1()
+            {   
+                // list of players
                 var player0 = new Player("A");
                 var player1 = new Player("B");
                 var player2 = new Player("C");
                 var playerList = [player0, player1, player2];
                 
                 
-                gameController = new GameController(wheel, playerList);
+                // default categories: values are set in gameController.js
+                var category6 = new Category("", "");
+                var category7 = new Category("", "");
+                var category8 = new Category("", "");
+                var category9 = new Category("", "");
+                var category10 = new Category("", "");
+                var category11 = new Category("", "");
+                
+                // Round 1
+                // questions List category0
+                var c0q0 = new Question('c0q01111111111111111111 111111111111111111111111 11111111111111111111111111111 11111111111111111111111', 'c0a0', 200);
+                var c0q1 = new Question('c0q1', 'c0a1', 400);
+                var c0q2 = new Question('c0q2', 'c0a2', 600);
+                var c0q3 = new Question('c0q3', 'c0a3', 800);
+                var c0q4 = new Question('c0q4', 'c0a4', 1000);
+                var category0QuestionsList = [c0q0, c0q1, c0q2, c0q3, c0q4];
+                
+                // questions List category1 
+                var c1q0 = new Question('c1q0111111111111111 1111111111111111111 11111c0q0111111111111111111111111 111111111111111111111111111111111111111 1111111111111111111111111 111111111111111111111111111 111111111111111111111111111111111111', 'c1a0', 200);
+                var c1q1 = new Question('c1q1', 'c1a1', 400);
+                var c1q2 = new Question('c1q2', 'c1a3', 600);
+                var c1q3 = new Question('c1q3', 'c1a4', 800);
+                var c1q4 = new Question('c1q4', 'c1a5', 1000);
+                var category1QuestionsList = [c1q0, c1q1, c1q2, c1q3, c1q4];
+                
+                // questions List category2
+                var c2q0 = new Question('c2q011111111111111111111111111111 1c0q011111111111111111111 11111111111111111111111111111 11111111111111111111111111 111111111111111111111 1111111111111111111111111111 111111111111111111111 111111111111111', 'c2a0', 200);
+                var c2q1 = new Question('c2q1', 'c2a1', 400);
+                var c2q2 = new Question('c2q2', 'c2a2', 600);
+                var c2q3 = new Question('c2q3', 'c2a3', 800);
+                var c2q4 = new Question('c2q4', 'c2a4', 1000);
+                var category2QuestionsList = [c2q0, c2q1, c2q2, c2q3, c2q4];
+                
+                // questions List category3
+                var c3q0 = new Question('c3q01111111111111111111111111111111 1c0q011111111111111 111111111111111111111111111111 11111111111111111111111111111111 11111111111111111111111 11111111111111111111111 11111111111111111111111111111 1111111', 'c3a0', 200);
+                var c3q1 = new Question('c3q1', 'c3a1', 400);
+                var c3q2 = new Question('c3q2', 'c3a2', 600);
+                var c3q3 = new Question('c3q3', 'c3a3', 800);
+                var c3q4 = new Question('c3q4', 'c3a4', 1000);
+                var category3QuestionsList = [c3q0, c3q1, c3q2, c3q3, c3q4];
+
+                // questions List category4
+                var c4q0 = new Question('c4q011111111111111111111111111 111111111c0q011111111111111 1111111111111111111111111 1111111111111111111111111111111111111 1111111111111111111111111 11111111111111111111111111111111 1111111111111111111111', 'c4a0', 200);
+                var c4q1 = new Question('c4q1', 'c4a1', 400);
+                var c4q2 = new Question('c4q2', 'c4a2', 600);
+                var c4q3 = new Question('c4q3', 'c4a3', 800);
+                var c4q4 = new Question('c4q4', 'c4a4', 1000);
+                var category4QuestionsList = [c4q0, c4q1, c4q2, c4q3, c4q4];
+                
+                // questions List category5
+                var c5q0 = new Question('c5q011111111111111111111 11111111111111111111111111 11111111111c0q011111111111111111111 11111111111111111111111111111111111 11111111111111111111111 11111111111111111111111111 11111111111111111111111111111', 'c5a0', 200);
+                var c5q1 = new Question('c5q1', 'c5a1', 400);
+                var c5q2 = new Question('c5q2', 'c5a2', 600);
+                var c5q3 = new Question('c5q3', 'c5a3', 800);
+                var c5q4 = new Question('c5q4', 'c5a5', 1000);
+                var category5QuestionsList = [c5q0, c5q1, c5q2, c5q3, c5q4];
+                
+                
+                // dynamic categories
+                var category0 = new Category(category0QuestionsList, "Category 0");
+                var category1 = new Category(category1QuestionsList, "Category 1");
+                var category2 = new Category(category2QuestionsList, "Category 2");
+                var category3 = new Category(category3QuestionsList, "Category 3");
+                var category4 = new Category(category4QuestionsList, "Category 4");
+                var category5 = new Category(category5QuestionsList, "Category 5");
+                
+                var categoryList = [category0, category1, category2, category3, category4, category5,
+                                    category6, category7, category8, category9, category10, category11];
+                
+                var wheel = 
+                        new Wheel("wheel",
+                        {
+                            includeLabels: true,
+                            data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+                            colors: [
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"]
+                            ]
+                        });
+                
+                var board = new Board();
+                
+                var roundNumber = 1
+                gameController = new GameController(wheel, board, playerList, categoryList, roundNumber);
                 gameController.startGame();
             }
+            
+            function createGameControllerR2()
+            {   
+                console.log("--> createGameControllerR2 running");
+                
+                // list of players
+                var player0 = new Player("A");
+                var player1 = new Player("B");
+                var player2 = new Player("C");
+                var playerList = [player0, player1, player2];
+                
+                
+                // default categories: values are set in gameController.js
+                var category6 = new Category("", "");
+                var category7 = new Category("", "");
+                var category8 = new Category("", "");
+                var category9 = new Category("", "");
+                var category10 = new Category("", "");
+                var category11 = new Category("", "");
+                
+                // Round 2
+                // questions List category0
+                var c0q0 = new Question('c0q01111111111111111111 111111111111111111111111 11111111111111111111111111111 11111111111111111111111', '', 400);
+                var c0q1 = new Question('c0q1', '', 800);
+                var c0q2 = new Question('c0q2', '', 1200);
+                var c0q3 = new Question('c0q3', '', 1600);
+                var c0q4 = new Question('c0q4', '', 2000);
+                var category0QuestionsList = [c0q0, c0q1, c0q2, c0q3, c0q4];
+                
+                // questions List category1 
+                var c1q0 = new Question('c1q0111111111111111 1111111111111111111 11111c0q0111111111111111111111111 111111111111111111111111111111111111111 1111111111111111111111111 111111111111111111111111111 111111111111111111111111111111111111', '', 400);
+                var c1q1 = new Question('c1q1', '', 800);
+                var c1q2 = new Question('c1q2', '', 1200);
+                var c1q3 = new Question('c1q3', '', 1600);
+                var c1q4 = new Question('c1q4', '', 2000);
+                var category1QuestionsList = [c1q0, c1q1, c1q2, c1q3, c1q4];
+                
+                // questions List category2
+                var c2q0 = new Question('c2q011111111111111111111111111111 1c0q011111111111111111111 11111111111111111111111111111 11111111111111111111111111 111111111111111111111 1111111111111111111111111111 111111111111111111111 111111111111111', '', 400);
+                var c2q1 = new Question('c2q1', '', 800);
+                var c2q2 = new Question('c2q2', '', 1200);
+                var c2q3 = new Question('c2q3', '', 1600);
+                var c2q4 = new Question('c2q4', '', 2000);
+                var category2QuestionsList = [c2q0, c2q1, c2q2, c2q3, c2q4];
+                
+                // questions List category3
+                var c3q0 = new Question('c3q01111111111111111111111111111111 1c0q011111111111111 111111111111111111111111111111 11111111111111111111111111111111 11111111111111111111111 11111111111111111111111 11111111111111111111111111111 1111111', '', 400);
+                var c3q1 = new Question('c3q1', '', 800);
+                var c3q2 = new Question('c3q2', '', 1200);
+                var c3q3 = new Question('c3q3', '', 1600);
+                var c3q4 = new Question('c3q4', '', 2000);
+                var category3QuestionsList = [c3q0, c3q1, c3q2, c3q3, c3q4];
+
+                // questions List category4
+                var c4q0 = new Question('c4q011111111111111111111111111 111111111c0q011111111111111 1111111111111111111111111 1111111111111111111111111111111111111 1111111111111111111111111 11111111111111111111111111111111 1111111111111111111111', '', 400);
+                var c4q1 = new Question('c4q1', '', 800);
+                var c4q2 = new Question('c4q2', '', 1200);
+                var c4q3 = new Question('c4q3', '', 1600);
+                var c4q4 = new Question('c4q4', '', 2000);
+                var category4QuestionsList = [c4q0, c4q1, c4q2, c4q3, c4q4];
+                
+                // questions List category5
+                var c5q0 = new Question('c5q011111111111111111111 11111111111111111111111111 11111111111c0q011111111111111111111 11111111111111111111111111111111111 11111111111111111111111 11111111111111111111111111 11111111111111111111111111111', '', 400);
+                var c5q1 = new Question('c5q1', '', 800);
+                var c5q2 = new Question('c5q2', '', 1200);
+                var c5q3 = new Question('c5q3', '', 1600);
+                var c5q4 = new Question('c5q4', '', 2000);
+                var category5QuestionsList = [c5q0, c5q1, c5q2, c5q3, c5q4];
+                
+                
+                // dynamic categories
+                var category0 = new Category(category0QuestionsList, "Category A");
+                var category1 = new Category(category1QuestionsList, "Category B");
+                var category2 = new Category(category2QuestionsList, "Category C");
+                var category3 = new Category(category3QuestionsList, "Category D");
+                var category4 = new Category(category4QuestionsList, "Category E");
+                var category5 = new Category(category5QuestionsList, "Category F");
+                
+                var categoryList = [category0, category1, category2, category3, category4, category5,
+                                    category6, category7, category8, category9, category10, category11];
+                
+                var wheel = 
+                        new Wheel("wheel",
+                        {
+                            includeLabels: true,
+                            data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+                            colors: [
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"]
+                            ]
+                        });
+                
+                var board = new Board();
+                
+                var roundNumber = 2;
+                gameController = new GameController(wheel, board, playerList, categoryList, roundNumber);
+                gameController.startGame();
+            }
+            
             
             function createWheel() {
                 //
@@ -40,9 +249,9 @@
                         {
                             includeLabels: true,
                             data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
-                            labels: ["Category 1", "Bankrupt", "Category 2", "Lose Turn",
-                                "Category 3", "Free Turn", "Category 4", "Spin Again",
-                                "Category 5", "Player's Choice", "Category 6", "Opponents' Choice"],
+                            // labels: ["Category 1", "Bankrupt", "Category 2", "Lose Turn",
+                            //     "Category 3", "Free Turn", "Category 4", "Spin Again",
+                            //     "Category 5", "Player's Choice", "Category 6", "Opponents' Choice"],
                             colors: [
                                 ["#FFDAB9", "#C0392B"],
                                 ["#E6E6FA", "#C0392B"],
@@ -57,101 +266,285 @@
                                 ["#E6E6FA", "#C0392B"],
                                 ["#E0FFFF", "#C0392B"]
                             ]
-                        }, gameController
-                );
-                //
-                // nothing appears until you call draw().
-                //
-                wheel.draw(0, false);
-                /*
-                 * If you want to draw the labels separately, you can set
-                 * includeLabels to false, and call drawLabel() for each
-                 * pie chart segment.
-                 *
-                 for (var i = 0; i < pieChart.labels.length; i++) {
-                 pieChart.drawLabel(i);
-                 }
-                 */
-                /*
-                 * If you want to select a segment to highight it, you can
-                 * call select() for a given segment. Here's a little snippet
-                 * that animates selecting each segment.
-                 *
-                 var segment = 0;
-                 function nextSegment() {
-                 pieChart.select(segment);
-                 segment++;
-                 if (segment < pieChart.data.length) {
-                 setTimeout(nextSegment, 1000);
-                 }
-                 }
-                 setTimeout(nextSegment, 1000);
-                 */
+                        });
             }
         </script>
     </head>
     <body>
 
-        <table border="1">
-            <tr>
-                <td colspan="3">
-                    <table width="100%" border="1">
-                        <tr>
-                            <td width="100%" align="left">
-                                Timer: <span id="timer">0</span><br/>
-                                Spins Left: <span id="spinsLeft"></span><br/>
-                                Player <span id="currentPlayerName"></span>'s turn 
-                            </td>
-                        </tr>
-                    </table>
+        <table width="100%" border="1">
+            <tr >
+                <td colspan="3" align="center" >
+                    <img alt src="img/logo.jpg" style="height:150px"/>
+                    <br/><br/>
                 </td>
             </tr>
             <tr>
-                <td>
+                <td width="400px" height="400px">
                     <canvas id="wheel" width="400" height="400">
                     </canvas>
                 </td>
-                <td>
+                <td style="width: 30px;">
                     <br/>
-                    <img alt src="img/pointer2.png" style="width: 26px;height: 13px"/>
+                    <img alt src="img/pointer.png" style="width: 26px;height: 13px"/>
                 </td> 
-                <td width="400" align="center">
-                    Jeopardy Board
+                <td align="center">
+                    <table class="jeopardyBoard" width="800">
+                        <tr>
+                            <td height="100" class="jeopardyBoard" >
+                                <button disabled class="categoryButton" id="categoryButton0" onclick="gameController.selectCategory(0);" >Category 0</button>
+                            </td>
+                            
+                            <td height="100" class="jeopardyBoard" >
+                                <button disabled class="categoryButton" id="categoryButton1" onclick="gameController.selectCategory(1);">Category 1</button>
+                            </td>
+                            
+                            <td height="100" class="jeopardyBoard" >
+                                <button disabled class="categoryButton" id="categoryButton2" onclick="gameController.selectCategory(2);">Category 2</button>
+                            </td>
+                            
+                            <td height="100" class="jeopardyBoard" >
+                                <button disabled class="categoryButton" id="categoryButton3" onclick="gameController.selectCategory(3);">Category 3</button>
+                            </td>
+                            
+                            <td height="100" class="jeopardyBoard" >
+                                <button disabled class="categoryButton" id="categoryButton4" onclick="gameController.selectCategory(4);">Category 4</button>
+                            </td>
+                            
+                            <td height="100" class="jeopardyBoard" >
+                                <button disabled class="categoryButton" id="categoryButton5" onclick="gameController.selectCategory(5);">Category 5</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="100" class="jeopardyBoard">
+                                <span id="valueC0Q0">valueC0Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q0">valueC1Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q0">valueC2Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q0">valueC3Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q0">valueC4Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q0">valueC5Q0</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="100" class="jeopardyBoard">
+                                <span id="valueC0Q1">valueC0Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q1">valueC1Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q1">valueC2Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q1">valueC3Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q1">valueC4Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q1">valueC5Q1</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="100" class="jeopardyBoard">
+                                <span id="valueC0Q2">valueC0Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q2">valueC1Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q2">valueC2Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q2">valueC3Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q2">valueC4Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q2">valueC5Q2</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="100" class="jeopardyBoard">
+                                <span id="valueC0Q3">valueC0Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q3">valueC1Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q3">valueC2Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q3">valueC3Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q3">valueC4Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q3">valueC5Q3</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="100" class="jeopardyBoard">
+                                <span id="valueC0Q4">valueC0Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q4">valueC1Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q4">valueC2Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q4">valueC3Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q4">valueC4Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q4">valueC5Q4</span>
+                            </td>
+                        </tr>
+                    </table>
                 </td> 
             </tr>
             <tr>
-                <td colspan="3">
-                    Category: <span id="category"></span>
+                <td colspan="3" style="word-wrap: break-word" >
+                    Player <span id="currentPlayerName"></span>'s turn <br/>
+                    Spins Left: <span id="spinsLeft"></span><br/>
+                    Round: <span id="roundNumber"></span><br/>
                     <br/>
-                    Question: <span id="question"></span>
+                </td>
+            <tr>
+                <td width="400" align="left" valign="top">
+                    Selected Category: <span style="width:800px;word-wrap: break-word;" id="selectedCategory"></span>
+                    <br/>
+                    Selected Question: <span style="width:800px;word-wrap: break-word;" id="selectedQuestion"></span>
+                    <br/>
+                    Answer: <span style="width:800px;word-wrap: break-word;" id="answer"></span>
+                    <br/>
+                </td>
+                <td colspan="2" align="center">
+                    <font size="10">Timer: </font>
+                    <font size="10" id="timer">0</font><br/>
+                    <button disabled class="w3-btn w3-white w3-border w3-border-green w3-round-xxlarge" id="correctButton" onclick="gameController.selectCorrect()" style="width:200px">Correct</button>
+                    <button disabled class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge" id="incorrectButton" onclick="gameController.selectIncorrect()" style="width:200px">Incorrect</button>
+                    <button disabled class="w3-btn w3-white w3-border w3-border-blue w3-round-xxlarge" id="timeExpiredButton" onclick="gameController.selectTimeExpired()" style="width:200px">Time Expired</button>
+                    <br/>
+                    <br/>
                 </td>
             </tr>
             <tr>
                 <td colspan="3">
-                    <table width="100%" border="1">
+                    <table width="100%"  border="1">
                         <tr>
-                            <td>
+                            <td >
                                 <span id="player0Name">Player 0</span><br/>
                                 Score: <span id="player0Score">0</span><br/>
                                 Free spin tokens: <span id="player0Tokens">0</span><br/>
-                                <button id="player0Spin" onclick="wheel.spin();">Spin</button>
+                                <button id="player0Spin" style="width:100px" onclick="gameController.spinWheel();" 
+                                        class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge">
+                                    Spin
+                                </button>
                             </td>
-                            <td>
+                            <td >
                                 <span id="player1Name">Player 1</span><br/>
                                 Score: <span id="player1Score">0</span><br/>
                                 Free spin tokens: <span id="player1Tokens">0</span><br/>
-                                <button id="player1Spin" onclick="wheel.spin();" disabled>Spin</button>
+                                <button id="player1Spin" style="width:100px" onclick="gameController.spinWheel();" 
+                                        disabled class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge">
+                                    Spin
+                                </button>
                             </td> 
-                            <td>
+                            <td >
                                 <span id="player2Name">Player 2</span><br/>
                                 Score: <span id="player2Score">0</span><br/>
-                                Free spin tokens: <span id="player2Tokens">0</span><br/>
-                                <button id="player2Spin" onclick="wheel.spin();" disabled>Spin</button>
+                                Free Spin Tokens: <span id="player2Tokens">0</span><br/>
+                                <button id="player2Spin" style="width:100px" onclick="gameController.spinWheel();" 
+                                        disabled class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge">
+                                    Spin
+                                </button>
                             </td> 
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
+        
+        <!-- Use Token Modal -->
+        <div class="modal fade" id="useTokenModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        Player <span id="popupHeader" class="modal-title">Modal Header</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>You have <span id="popupTokens"></span> Free Spin Tokens. Would you like to use one of them?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.useTokenFlow();" >Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.loseTurnFlow();" >No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Message Modal -->
+        <div class="modal fade" id="messageModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        Game Message
+                    </div>
+                    <div class="modal-body">
+                        <span id="gameMessage"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button style="display: none" id="startRound2" type="button" class="btn btn-default" data-dismiss="modal" onclick="createGameControllerR2()">Start Round 2!</button>
+                        <button id="ok" type="button" class="btn btn-default" data-dismiss="modal" onclick="">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </body>
 </html>
