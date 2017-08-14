@@ -4,13 +4,14 @@ from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
-
+import random
 
 '''
     The TestBlackboxGame class is the base and used for setup
     
     Then testsuite is used because Unittest execute the test cases in alphabetical order
-    Testsuite can specify the test cases to run in a certain order
+    Testsuite can specify the test cases to run in a certain order. This will come in handy
+    when testing the game play flow.
 '''
 
 #basic test suite. Creates a webdriver.
@@ -143,26 +144,15 @@ class TestFirstPlayer(TestBlackboxGame):
             spin_id = 'player{0}Spin'.format(player_number)
             assert(self.driver.find_element_by_id(spin_id))
 
-# open chrome, visit bing.com and search for "cheese!", check for cheese in title of result page, close chrome
-class TestSeleniumOpenBing(TestBlackboxGame):
-    def test_selenium_start_with_bing(self):
-        # go to the google home page
-        self.driver.get("http://www.bing.com")
+class TestRandomGame(TestBlackboxGame):
+    def test_game_started(self):
+        print('Visiting game at ' + self.game_path)
+        self.driver.get(self.game_path)
+        #check if wheel is in title
+        self.assertTrue('Wheel' == self.driver.title)
 
-        # the page is ajaxy so the title is originally this:
-        print self.driver.title
-
-        # find the element that's name attribute is q (the google search box)
-        inputElement = self.driver.find_element_by_name("q")
-
-        # type in the search
-        inputElement.send_keys("cheese!")
-
-        # submit the form (although google automatically searches now without submitting)
-        inputElement.submit()
-
-        # You should see "cheese! - Google Search"
-        self.assertTrue('cheese' in self.driver.title)
+    def test_play_game_random(self):
+        raise NotImplementedError
 
 if __name__ == '__main__':
     # unittest.main()

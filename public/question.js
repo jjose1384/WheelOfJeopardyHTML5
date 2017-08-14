@@ -6,11 +6,12 @@
 
 function Question(questionParam, answerParam, valueParam)
 {
-    this.question = questionParam;
-    this.answer = answerParam;
+    this.questionText = questionParam;
+    this.answerText = answerParam;
     this.value = valueParam;
 }
 
 Question.prototype = {
+    
     
 };
