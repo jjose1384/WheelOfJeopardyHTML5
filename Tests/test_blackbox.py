@@ -5,7 +5,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
 import random
-
+import PlayGameUtil
 '''
     The TestBlackboxGame class is the base and used for setup
     
@@ -151,11 +151,26 @@ class TestRandomGame(TestBlackboxGame):
         #check if wheel is in title
         self.assertTrue('Wheel' == self.driver.title)
 
+    def test_get_question(self):
+        game_util = PlayGameUtil.GameUtil(self.driver)
+        print(game_util.read_player_turn())
+        print(game_util.read_state_indicators())
+        print(game_util.read_player_info())
+        print(game_util.read_question_info())
+
     def test_play_game_random(self):
         raise NotImplementedError
+
+def testsuite_TestRandomGame():
+    suite = unittest.TestSuite()
+    suite.addTest(TestRandomGame('test_game_started'))
+    suite.addTest(TestRandomGame('test_get_question'))
+    # suite.addTest(TestRandomGame('test_play_game_random'))
+    return suite
 
 if __name__ == '__main__':
     # unittest.main()
     # loader = unittest.TestLoader()
     runner = unittest.TextTestRunner(failfast=True)
-    runner.run(testsutie_TestOpenNewGame())
+    # runner.run(testsutie_TestOpenNewGame())
+    runner.run(testsuite_TestRandomGame())
