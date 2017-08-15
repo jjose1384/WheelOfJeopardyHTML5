@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Wheel of Jeopardy Setup</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-messaging.js"></script>      
+        <script>
+            
+            window.onload = initialize;
+            var database = firebase.database();   // Question Database
+            var qcategories = document.getElementById("cats");  // Dropdown box for categories
+            
+            
+            function initialize()
+            {
+                 var config = 
+                 {
+                    apiKey: "AIzaSyDyJm_YJrHPBF-UkYdKnXw9Q1lSvyggLYo",
+                    authDomain: "wheelofjeopardy-e8e2c.firebaseapp.com",
+                    databaseURL: "https://wheelofjeopardy-e8e2c.firebaseio.com",
+                    projectId: "wheelofjeopardy-e8e2c",
+                    storageBucket: "wheelofjeopardy-e8e2c.appspot.com",
+                    messagingSenderId: "966995717188"
+                };
+                
+                firebase.initializeApp(config);
+
+                loadCategories();  //  Load the categories
+            }
+            
+            function loadCategories()
+            {
+                var categories = document.getElementById("cats");  // Dropdown box for categories
+                var query = firebase.database().ref("categories").orderByKey();
+                var index = 0;
+                var newCat = document.createElement("option");
+                
+                query.once("value").then(function(snapshot) 
+                {
+                    snapshot.forEach(function(childSnapshot)
+                    {
+                        var key = new String(childSnapshot.key);      //  Get the category name.
+                        newCat = document.createElement("option");   //  Create a new object from the 
+                        newCat.value = key;
+                        newCat.text = key;
+                        categories.appendChild(newCat);     //  Append the option to the box.                       
+                    });
+                });
+            }
+            
+            function getCategories()
+            {
+                var catDropDown = document.getElementById("cats");  //  Get category list
+                var opt;
+                var selectedCats = new Array();   //  Will hold all the selected categories
+                
+                for(var i = 0; i < catDropDown.length; i++)
+                {
+                    opt = catDropDown.options[i];
+                    
+                    if(opt.selected)
+                    {  //  If the category is selected, add it to the group
+                        selectedCats.push(opt.value);
+                        window.alert(opt.value);
+                    }
+                }
+                
+                
+            }
+            
+            
+            
+            
+        </script>
+    </head>
+    <body>
+        <form name="userInput">
+            <table border="1" cellpadding="3">
+                <thead>
+                    <tr>
+                        <img src="img/Wheel of Jeopardy.png" width="500" height="250" alt="Wheel of Jeopardy"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align = "center">
+                            Setup - Please enter the following information.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Player 1 Name:  <input type="text" name="p1Name" value="Enter Name" size="50" /></br>
+                            Player 2 Name:  <input type="text" name="p2Name" value="Enter Name" size="50" /></br>
+                            Player 3 Name:  <input type="text" name="p3Name" value="Enter Name" size="50" /></br>
+                        </td>
+                    </tr>
+                    <tr>
+                         <td >
+                             Please select 12 categories from the list below </br>
+                             <select id="cats" name="cats" multiple="multiple"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                         <input type="button" value="Start Game" name="startGame" onclick="getCategories()" />
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <div></div>
+    </body>
+</html>
