@@ -8,6 +8,7 @@ from random import randint
 import json
 import os
 from selenium import webdriver
+import time
 
 class GameUtil(object):
     def __init__(self, driver, max_player = 3):
@@ -36,23 +37,46 @@ class GameUtil(object):
                     to_do:
                         update categories by name instead of numbers
                 '''
+                if category_number not in self.categories.keys():
+                    self.categories[category_number] = []
+                self.categories[category_number].append(categories)
 
-                self.categories['']
+    def get_all_categories(self):
+        return self.categories
 
     ###Game logic helper functions
 
     #return a random number to pick a random answer choice
     def pick_random_answer(self):
+        raise NotImplementedError
         return randint(0,4)
 
     #should connect to database and retrun a choice that is not the right answer
     def pick_wrong_answer(self, question, category):
-        raise NotImplementedError
+        category = self.categories[category][0]
+        print(category)
 
     def pick_right_answer(self, question, category):
         raise NotImplementedError
 
     ###WebDriver related helper functions
+
+    '''
+        spin wheel for current player or specify a player index 0...max_player
+    '''
+    def do_spin_wheel(self, player_number = None):
+
+        if player_number == None:
+            #read the board and see who the current player is
+            player_number = self.read_player_turn()
+        try:
+            self.driver.find_element_by_xpath('// *[ @ id = "player{0}Spin"]'.format(player_number)).click()
+            #wait for wheel to stop spinning. timeout + 1
+            time.sleep(11)
+            return True
+        except:
+            return False
+
     '''
         return the state indicators such as current_player_turn, spins_left, round#
     '''
@@ -90,19 +114,46 @@ class GameUtil(object):
 
         self.question_info = question_info
         return  question_info
+
+
     '''
         return the current player number 0...to...max_player
+        read all spin button and see which one is enabled. Compare with the current player turn according to the board
     '''
     def read_player_turn(self):
-        for i in range(0,self.max_player):
-            xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
+        enabled_player = None
+        for i in range(0, self.max_player):
             try:
+                # get each element by id
+                xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
                 playerSpin = self.driver.find_element_by_xpath(xpath)
+                #set enabled_player to i if their spin is enabled
+                if playerSpin.is_enabled():
+                    if enabled_player:
+                        #found multiple player with spin enabled
+                        raise ValueError
+                    else:
+                        enabled_player = i
             except:
-                print('Could not find player {0} info'.format(str(i)))
+                print('Could not find state info')
+        print(enabled_player)
+        #check if we found at least one. If not found, raise exception
+        if enabled_player == None:
+            raise ValueError
 
-            if playerSpin.is_enabled():
-                return i
+        #double checking with state indecators "Players {playerName}'s turn"
+        state_indecators = self.read_state_indicators()
+        current_player = state_indecators['currentPlayer']
+        #subtracting 'Player ' from the string
+        current_player.replace('Player ','')
+        current_player.replace('\'s turn','')
+        player_infos = self.read_player_info()
+        for player in player_infos:
+            if player['playerName'] == current_player:
+                return enabled_player
+
+        #if the current_player does not match with the spin enabled, raise error
+        raise ValueError
 
     '''
         return a list of players info (name, score, Free spin tokens)

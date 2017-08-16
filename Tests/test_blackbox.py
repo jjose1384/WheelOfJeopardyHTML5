@@ -157,7 +157,11 @@ class TestRandomGame(TestBlackboxGame):
         print(game_util.read_state_indicators())
         print(game_util.read_player_info())
         print(game_util.read_question_info())
-
+        print(game_util.do_spin_wheel())
+        question_info = game_util.read_question_info()
+        question = question_info['selectedQuestion']
+        category = question_info['selectedCategory']
+        print(game_util.pick_wrong_answer(question,category))
     def test_play_game_random(self):
         raise NotImplementedError
 
