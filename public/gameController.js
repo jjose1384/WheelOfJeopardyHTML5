@@ -66,7 +66,7 @@ GameController.prototype = {
         this.wheel.draw(0, false);
     },
     
-    startCountdownTimer: function ()
+	startCountdownTimer: function ()
     {
         var self = this;
         self.gameTimer = gameTimerDefault;
