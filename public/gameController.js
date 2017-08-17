@@ -129,8 +129,10 @@ GameController.prototype = {
     {
         var self = this;
         var outputId = "selectedQuestion";
+        
         if (self.board.selectedCategory !== null)
         {
+            window.alert("inside selected question.")
             document.getElementById(outputId).textContent = self.board.selectedCategory.selectedQuestion.questionText; // display question
         }
         else
@@ -286,7 +288,7 @@ GameController.prototype = {
         
         self.board.findCategoryByTitle(categoryText);
         self.updateSelectedCategory();
-
+        
         if (categoryText === category_bankrupt)
         {
             // play bankrupt sound
@@ -366,8 +368,10 @@ GameController.prototype = {
         } 
         else // one of the jeopardy categories selected
         {
+            window.alert("got in isCategoryAvailable");
             if (self.board.selectedCategory.isCategoryAvailable())
             {
+                
                 self.updateSelectedQuestion();
                 self.updateJeopardyBoard(); // clear out value
                 self.questionsLeft--; // decrement questions
