@@ -22,7 +22,6 @@ and open the template in the editor.
             
             window.onload = initialize;
             var database = firebase.database();   // Question Database
-            var qcategories = document.getElementById("cats");  // Dropdown box for categories
             var allCats;
             
             function initialize()
@@ -86,9 +85,7 @@ and open the template in the editor.
                     {  //  If the category is selected, add it to the group
                         selectedCats.push(opt.value);
                         questionList = new Array();
-                       // waiter = await inProcessCategory(opt.value, count);
-                        
-                        
+                              
                        var tempor = await (firebase.database().ref("/categories/" + opt.value).once('value').then(function(snapshot)
                         {
                             pointValue = 1; 
@@ -121,7 +118,6 @@ and open the template in the editor.
                     }
                 }
                 
-                window.alert(catList[0].title);
                 await localStorage.setItem('board1', JSON.stringify(catList));
                 
                
@@ -167,7 +163,9 @@ and open the template in the editor.
                         </td>
                     </tr>
                     <tr>
-                         <input type="button" value="Start Game" name="startGame" onclick="getCategories()" />
+                        <td>
+                             <input type="button" value="Start Game" name="startGame" onclick="getCategories()" />
+                        </td>
                     </tr>
                 </tbody>
             </table>
