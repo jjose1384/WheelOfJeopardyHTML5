@@ -85,6 +85,7 @@ Wheel.prototype = {
 
     rotate: function() {
         startAngleBuffer += rotationIncrement;
+        startAngleBuffer = startAngleBuffer % 360;
         this.draw(startAngleBuffer, false);
     },
 
@@ -96,12 +97,13 @@ Wheel.prototype = {
 
     draw: function(startingRotationDegrees, highlight, gameController) {
             var self = this;
-            startAngleBuffer = startingRotationDegrees;
 
             var highlightIndex;
             if (highlight === true)
             {
-                highlightIndex = 12 - Math.ceil((startAngleBuffer % 360)/30);
+                highlightIndex = (12 - Math.ceil((startingRotationDegrees % 360)/30))%12;
+                console.log("startAngleBuffer: " + startingRotationDegrees);
+                console.log("hightlightIndex: " + highlightIndex);
                 console.log(self.labels[highlightIndex]); 
 
                 gameController.processWheelCategory(self.labels[highlightIndex]);

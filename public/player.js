@@ -23,6 +23,11 @@ Player.prototype = {
         
     },
     
+    getTotalScore: function() // set the score of player based on scoreParam
+    {
+        return this.scoreR1 + this.scoreR2;
+    },
+    
     setScore: function(scoreParam, roundParam) // set the score of player based on scoreParam
     {
         if (roundParam === 2)

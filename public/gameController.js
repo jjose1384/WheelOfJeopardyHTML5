@@ -162,7 +162,7 @@ GameController.prototype = {
         var self = this;
         var outputId = "currentPlayerName";
         var popupHeader = "popupHeader";
-        var currentPlayer = self.playerList[self.currentPlayerIndex];
+        var currentPlayer = self.getCurrentPlayer();
         
         document.getElementById(outputId).innerHTML = currentPlayer.name;
         document.getElementById(popupHeader).innerHTML = currentPlayer.name;
@@ -186,8 +186,6 @@ GameController.prototype = {
         var outputId = "player" + playerIndex + "Tokens";
         document.getElementById(outputId).innerHTML = selectedPlayer.tokens;
         
-        // update popup token
-        document.getElementById("popupTokens").innerHTML = selectedPlayer.tokens;
     },
         
     // updates Round Number
@@ -216,7 +214,36 @@ GameController.prototype = {
             self.currentPlayerIndex = 0;
         }
     },
+    
+    decrementPlayer: function()
+    {
+        var self = this;
+        self.currentPlayerIndex--;
+        if (self.currentPlayerIndex < 0)
+        {
+            self.currentPlayerIndex = 2;
+        }
+    },
+    
+    getNextPlayer: function()
+    {
+        var self = this;
+        var nextPlayerIndex = self.currentPlayerIndex+1;
+        if (nextPlayerIndex > 2)
+        {
+            nextPlayerIndex = 0;
+        }
         
+        return self.playerList[nextPlayerIndex];
+    },
+    
+    getCurrentPlayer: function()
+    {
+        var self = this;
+        return self.playerList[self.currentPlayerIndex];
+    },
+       
+    // disable all spin buttons
     disableSpinButtons: function()
     {
         document.getElementById("player0Spin").disabled = true;
@@ -224,8 +251,12 @@ GameController.prototype = {
         document.getElementById("player2Spin").disabled = true;
     },
         
+    // enable only the specified spin button    
     enableSpinButton: function(playerIndex) // options are: player0Spin|player1Spin|player2Spin
     {
+        var self = this;
+        
+        self.disableSpinButtons();
         document.getElementById("player" + playerIndex + "Spin").disabled = false;
     },
     
@@ -293,15 +324,21 @@ GameController.prototype = {
             var audio = new Audio('sound/Wheel-of-fortune-bankrupt.mp3');
             audio.play();
             
-            var currentPlayer = self.playerList[self.currentPlayerIndex];
-            currentPlayer.setScore(0, self.roundNumber);
-            
-            self.updatePlayerScore(self.currentPlayerIndex);
+            var currentPlayer = self.getCurrentPlayer();
+            if (parseInt(currentPlayer.getScore(self.roundNumber)) > 0) // only set to 0 if the the player has positive points
+            {
+                currentPlayer.setScore(0, self.roundNumber);
+                self.updatePlayerScore(self.currentPlayerIndex);
+            }
 
             self.incrementPlayer();
             self.updateCurrentPlayer();
             
             self.enableSpinButton(self.currentPlayerIndex);
+            
+            
+            var messageText = "Sorry " + currentPlayer.name+ ", you are bankrupt!";
+            self.messageModalPopup(messageText, false);
             
             // check for end of round
             if (self.spinsLeft <= 0 || self.questionsLeft <= 0)
@@ -312,32 +349,41 @@ GameController.prototype = {
         } 
         else if (categoryText === category_loseTurn)
         {
-            // option to use token
-            var currentPlayer = self.playerList[self.currentPlayerIndex];
-            if (currentPlayer.tokens > 0)
-            {
-                self.useTokenModalPopup()();
-            }
-            else // normal flow for lose turn
-            {
-                self.loseTurnFlow();
-            }
-            
+            var currentPlayer = self.getCurrentPlayer();
+
             // check for end of round
             if (self.spinsLeft <= 0 || self.questionsLeft <= 0)
             {
                 // round has ended
                 self.endOfRound();
             }
+            else
+            {
+                // option to use token
+                if (currentPlayer.tokens > 0)
+                {
+                    self.useTokenModalPopup();
+                }
+                else // normal flow for lose turn
+                {
+                    self.loseTurnFlow();
+                    
+                    var messageText = "Sorry " + currentPlayer.name+ ", you have lost your turn!";
+                    self.messageModalPopup(messageText, false);
+                }    
+            }
         } 
         else if (categoryText === category_freeTurn)
-        {
-            var currentPlayer = self.playerList[self.currentPlayerIndex];
+        { 
+            var currentPlayer = self.getCurrentPlayer();
             currentPlayer.tokens++;
             self.updatePlayerTokens(self.currentPlayerIndex);
 
             self.enableSpinButton(self.currentPlayerIndex);
-                        
+
+            var messageText = currentPlayer.name+ ", you have won a free spin token!";
+            self.messageModalPopup(messageText, false);
+            
             // check for end of round
             if (self.spinsLeft <= 0 || self.questionsLeft <= 0)
             {
@@ -347,22 +393,39 @@ GameController.prototype = {
         } 
         else if (categoryText === category_spinAgain)
         {
-            self.enableSpinButton(self.currentPlayerIndex);
-                        
             // check for end of round
             if (self.spinsLeft <= 0 || self.questionsLeft <= 0)
             {
                 // round has ended
                 self.endOfRound();
             }
+            else
+            {
+                self.enableSpinButton(self.currentPlayerIndex);
+                
+                var messageText = self.getCurrentPlayer().name+ ", please spin again!";
+                self.messageModalPopup(messageText, false);
+            }
         } 
         else if (categoryText === category_playerChoice)
         {
+            self.questionsLeft--; // decrement questions
             self.board.enableCategoryButtons();
+            
+            var messageText = "Player's Choice! " + self.getCurrentPlayer().name + ", please select a category!";
+            self.messageModalPopup(messageText, false);
         } 
         else if (categoryText === category_opponentChoice)
         {
+            self.questionsLeft--; // decrement questions
             self.board.enableCategoryButtons();
+            
+            var currentPlayer = self.getCurrentPlayer();
+            var nextPlayer = self.getNextPlayer();
+            
+            var messageText = "Opponents's Choice! " + nextPlayer.name + ", please select a category for "+ currentPlayer.name+"!";
+            self.messageModalPopup(messageText, false);
+        
         } 
         else // one of the jeopardy categories selected
         {
@@ -377,8 +440,20 @@ GameController.prototype = {
             }
             else 
             {
-                // Spin again
-                self.enableSpinButton(self.currentPlayerIndex);          
+                // check for end of round
+                if (self.spinsLeft <= 0 || self.questionsLeft <= 0)
+                {
+                    // round has ended
+                    self.endOfRound();
+                }
+                else
+                {
+                    // Spin again
+                    self.enableSpinButton(self.currentPlayerIndex);     
+
+                    var messageText = "There are no more questions available in this category. " +self.getCurrentPlayer().name+ ", please spin again!";
+                    self.messageModalPopup(messageText, false);
+                }
             }
         }
     },
@@ -456,11 +531,23 @@ GameController.prototype = {
         
         if (self.roundNumber === 1)
         {
-            self.messageModalPopup("Round has ended, lets start the next round!", true);
+            self.messageModalPopup("Round 1 has ended!<br/><br/>  \n\
+                                    Round 1 scores:<br/>\n\
+                                    Player "+self.playerList[0].name+": "+self.playerList[0].getScore(0)+"<br/>\n\
+                                    Player "+self.playerList[1].name+": "+self.playerList[1].getScore(0)+"<br/>\n\
+                                    Player "+self.playerList[2].name+": "+self.playerList[2].getScore(0)+"<br/><br/>\n\
+                                    Lets start the next round!", true);
         }
         else // game has ended
         {
-            self.messageModalPopup("Game has ended! <br/> Congratulations!", false);
+            self.messageModalPopup("Game has ended! <br/><br/> \n\
+                                    Final score:<br/> \n\
+                                    Player "+self.playerList[0].name+": "+self.playerList[0].getTotalScore()+"<br/>\n\
+                                    Player "+self.playerList[1].name+": "+self.playerList[1].getTotalScore()+"<br/>\n\
+                                    Player "+self.playerList[2].name+": "+self.playerList[2].getTotalScore()+"<br/><br/>\n\
+                                    <b>"+self.returnWinningMessage()+"</b>", false);
+            
+            self.disableSpinButtons(); // game has ended and all options should be disabled;
         }
     },
     
@@ -476,7 +563,7 @@ GameController.prototype = {
     useTokenFlow: function()
     {
         var self = this;
-        var currentPlayer = self.playerList[self.currentPlayerIndex];
+        var currentPlayer = self.getCurrentPlayer();
         currentPlayer.tokens--; 
         self.updatePlayerTokens(self.currentPlayerIndex);
         
@@ -490,11 +577,12 @@ GameController.prototype = {
         self.disableModeratorButtons();
         self.resetTimer();
         
-        var currentPlayer = self.playerList[self.currentPlayerIndex];
+        var currentPlayer = self.getCurrentPlayer();
         currentPlayer.addSubtractScore(self.board.selectedCategory.selectedQuestion.value,
                                        self.roundNumber); // add the value to the player's score        
         self.updatePlayerScore(self.currentPlayerIndex);
 
+        self.updateAnswer(); // show the correct answer
         
         self.board.selectedCategory.incrementSelectedQuestion();
         self.enableSpinButton(self.currentPlayerIndex);
@@ -514,10 +602,12 @@ GameController.prototype = {
         self.disableModeratorButtons();
         self.resetTimer();
         
-        var currentPlayer = self.playerList[self.currentPlayerIndex];
+        var currentPlayer = self.getCurrentPlayer();
         currentPlayer.addSubtractScore(0 - self.board.selectedCategory.selectedQuestion.value, 
                                        self.roundNumber); // subtract the value from the player's score 
         self.updatePlayerScore(self.currentPlayerIndex);
+        
+        self.updateAnswer(); // show the correct answer
         
         self.board.selectedCategory.incrementSelectedQuestion();
         
@@ -547,7 +637,9 @@ GameController.prototype = {
         self.disableModeratorButtons();
         self.resetTimer();
         
-        var currentPlayer = self.playerList[self.currentPlayerIndex];
+        var currentPlayer = self.getCurrentPlayer();
+        
+        self.updateAnswer(); // show the correct answer
         
         self.board.selectedCategory.incrementSelectedQuestion();
         
@@ -578,6 +670,56 @@ GameController.prototype = {
         
         clearInterval(self.timer); // stop timer
         document.getElementById(outputId).innerHTML = "0";
+    },
+    
+    // returns the winning message
+    // could be a single winner, two winners or 3-way tie
+    returnWinningMessage: function()
+    {
+        var self = this;
+        var winningPlayerIndex = [0];
+        
+        var highestScore = self.playerList[0].getTotalScore();
+        for (var i = 1; i < 3; i++)
+        {
+            if (self.playerList[i].getTotalScore() > highestScore)
+            {
+                highestScore = self.playerList[1].getTotalScore();
+                winningPlayerIndex = [i];
+            }
+            else if (self.playerList[i].getTotalScore() === highestScore)
+            {
+                winningPlayerIndex.push(i);
+            }    
+        }
+        
+        var winningMessage;
+        if (winningPlayerIndex.length === 1)
+        {
+            winningMessage = "Congratulations " + self.playerList[winningPlayerIndex[0]].name + "! You win!!!";
+        }
+        else if (winningPlayerIndex.length === 2)
+        {
+            winningMessage = "It's a 2-way tie. Congratulations " + self.playerList[winningPlayerIndex[0]].name + " and " + self.playerList[winningPlayerIndex[1]].name + "!!!";
+        }
+        else // 3 way tie
+        {
+            winningMessage = "It's a 3-way tie. Congratulations all!!!";
+        }
+        
+        return winningMessage;
+    },
+    
+    // reset all player tokens to 0
+    resetPlayerTokens: function()
+    {
+        var self = this;
+        
+        for (var i = 0; i < 3; i++)
+        {
+            self.playerList[i].tokens = 0;
+            self.updatePlayerTokens(i);
+        }
     }
 };
 
