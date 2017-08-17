@@ -5,7 +5,11 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
 import random
+
+#wrapper help functions to control the browser
 import PlayGameUtil
+
+
 '''
     The TestBlackboxGame class is the base and used for setup
     
@@ -14,7 +18,7 @@ import PlayGameUtil
     when testing the game play flow.
 '''
 
-#basic test suite. Creates a webdriver.
+#basic test suite. Creates a webdriver and a PlayGameUtil object to be used for interating with game
 class TestBlackboxGame(unittest.TestCase):
     #ran once at the start of testsuite
     @classmethod
@@ -24,7 +28,14 @@ class TestBlackboxGame(unittest.TestCase):
         # make sure index.html path exist
         assert(os.path.exists(cls.game_path))
 
-        cls.driver = webdriver.Chrome()
+        cls.max_players = 3
+
+        #adding open maximized option
+        options = webdriver.ChromeOptions()
+        options.add_argument("--start-maximized")
+        cls.driver = webdriver.Chrome(chrome_options=options)
+
+        cls.play_game_util = PlayGameUtil.GameUtil(cls.driver, cls.max_players)
 
     #ran once after testing is done
     @classmethod
@@ -43,91 +54,85 @@ class TestBlackboxGame(unittest.TestCase):
 # test that time is set to zero, spin left = 50, player0Spin is active
 class TestOpenNewGame(TestBlackboxGame):
     def test_game_started(self):
-        print('Visiting game at ' + self.game_path)
         self.driver.get(self.game_path)
         #check if wheel is in title
-        self.assertTrue('Wheel' == self.driver.title)
+        self.assertTrue('Wheel' == self.play_game_util.read_title_value())
 
     #get Timer value
     def test_timer_zero(self):
-        timer_value = self.driver.find_element_by_xpath('//*[@id="timer"]').text
+        timer_value = self.play_game_util.read_timer_value()
         #check if Timer = zero
         self.assertEqual(int(timer_value),0)
 
     #check that the spin left is 50
     def test_spin_left_50(self):
-        spins_left_value = self.driver.find_element_by_xpath('//*[@id="spinsLeft"]').text
+        state_indicators = self.play_game_util.read_state_indicators()
+        spins_left_value = state_indicators['spinsLeft']
         #check spins left is 50
-        self.assertEqual(int(spins_left_value),50)
+        self.assertEqual(spins_left_value,50)
 
     #check player scores are zero
     def test_player_values_zero(self):
-        '''
-        player0Score = self.driver.find_element_by_xpath('//*[@id="player0Score"]')
-        player1Score = self.driver.find_element_by_xpath('//*[@id="player1Score"]')
-        player2Score = self.driver.find_element_by_xpath('//*[@id="player2Score"]')
-        #check player score exists
-        self.assertIsNotNone(player0Score)
-        self.assertIsNotNone(player1Score)
-        self.assertIsNotNone(player2Score)
-        player0Score_value = int(player0Score.text)
-        player1Score_value = int(player1Score.text)
-        player2Score_value = int(player2Score.text)
-        #check player scores all equal to zero
-        self.assertEqual(player0Score_value, 0)
-        self.assertEqual(player1Score_value, 0)
-        self.assertEqual(player2Score_value, 0)
-        '''
-
-        #loop does the checks in the above
-        for i in range(0,3):
-            xpath = '//*[@id="player{0}Score"]'.format(i)
-            playerScore = self.driver.find_element_by_xpath(xpath)
-            self.assertIsNotNone(playerScore)
-            playerScore_value = int(playerScore.text)
-            self.assertEqual(playerScore_value, 0)
-
+        player_infos = self.play_game_util.read_player_info()
+        #loop through each player and check score
+        for player in player_infos:
+            self.assertEqual(player['playerScore'],0)
 
     #check player free spin token are zero
     def test_player_token_zero(self):
-        for i in range(0,3):
-            xpath = '//*[@id="player{0}Tokens"]'.format(i)
-            playerScore = self.driver.find_element_by_xpath(xpath)
-            self.assertIsNotNone(playerScore)
-            playerScore_value = int(playerScore.text)
-            self.assertEqual(playerScore_value, 0)
+        player_infos = self.play_game_util.read_player_info()
+        #loop through each player and check free tokens
+        for player in player_infos:
+            self.assertEqual(player['playerToken'],0)
 
     def test_player0_turn(self):
-        '''
-        player0Spin = self.driver.find_element_by_xpath('// *[ @ id = "player0Spin"]')
-        player1Spin = self.driver.find_element_by_xpath('// *[ @ id = "player1Spin"]')
-        player2Spin = self.driver.find_element_by_xpath('// *[ @ id = "player2Spin"]')
+        spinner_status = self.play_game_util.read_spiner_status()
+        #check if first player is spinable
+        self.assertTrue(spinner_status[0])
 
-        #make sure player spin button exists
-        self.assertIsNotNone(player0Spin)
-        self.assertIsNotNone(player1Spin)
-        self.assertIsNotNone(player2Spin)
-        # player0Spin_attruibute = player0Spin.get_attribute('innerHTML')
-        # player1Spin_attruibute = player1Spin.get_attribute('innerHTML')
-        # player2Spin_attruibute = player2Spin.get_attribute('innerHTML')
+        #the rest of the spinners should be disabled
+        for spinner in spinner_status[1:]:
+            self.assertFalse(spinner)
 
-        #make sure only player0Spin is enabled
-        self.assertTrue(player0Spin.is_enabled())
-        self.assertFalse(player1Spin.is_enabled())
-        self.assertFalse(player2Spin.is_enabled())
-        '''
+        #should return that player0 should be the current player
+        self.assertEqual(self.play_game_util.read_player_turn(),0)
 
-        player0Spin = self.driver.find_element_by_xpath('// *[ @ id = "player0Spin"]')
-        self.assertIsNotNone(player0Spin)
-        self.assertTrue(player0Spin.is_enabled())
+    #check selected category, selected question, and answer should be empty:
+    def test_question_info_empty(self):
+        question_info = self.play_game_util.read_question_info()
+        #empty string should be false
+        self.assertFalse(question_info['selectedCategory'])
+        self.assertFalse(question_info['selectedQuestion'])
+        self.assertFalse(question_info['answer'])
 
-        #loop version of the commited code above
-        for i in range(1,3):
-            xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
-            playerSpin = self.driver.find_element_by_xpath(xpath)
-            self.assertIsNotNone(playerSpin)
-            self.assertFalse(playerSpin.is_enabled())
+    def test_state_indicators(self):
+        state_indicators = self.play_game_util.read_state_indicators()
+        self.assertEqual(state_indicators['spinsLeft'],50)
+        self.assertEqual(state_indicators['roundNumber'],1)
+        player_infos = self.play_game_util.read_player_info()
+        player0_name = player_infos[0]['playerName']
+        #check player's turn indicator is correct
+        self.assertEqual(state_indicators['currentPlayer'],player0_name)
 
+    def test_correct_not_clickable(self):
+        self.assertFalse(self.play_game_util.do_answer_correct())
+
+    def test_incorrect_not_clickable(self):
+        self.assertFalse(self.play_game_util.do_answer_incorrect())
+
+    def test_time_expired_not_clickable(self):
+        self.assertFalse(self.play_game_util.do_time_expired())
+
+    def test_all_prices(self):
+        board = self.play_game_util.read_jeopardy_board()
+        prices = board['prices']
+
+        #make sure each price is 200+i*200, where i is the row starting from zero
+        for column in prices:
+            for row,price in enumerate(column):
+                self.assertEqual(price, '${0}'.format(200+row*200))
+
+#suite used to run the TestOpenNewGame in order
 def testsutie_TestOpenNewGame():
     suite = unittest.TestSuite()
     suite.addTest(TestOpenNewGame('test_game_started'))
@@ -135,6 +140,12 @@ def testsutie_TestOpenNewGame():
     suite.addTest(TestOpenNewGame('test_spin_left_50'))
     suite.addTest(TestOpenNewGame('test_player_values_zero'))
     suite.addTest(TestOpenNewGame('test_player0_turn'))
+    suite.addTest(TestOpenNewGame('test_question_info_empty'))
+    suite.addTest(TestOpenNewGame('test_state_indicators'))
+    suite.addTest(TestOpenNewGame('test_correct_not_clickable'))
+    suite.addTest(TestOpenNewGame('test_incorrect_not_clickable'))
+    suite.addTest(TestOpenNewGame('test_time_expired_not_clickable'))
+    suite.addTest(TestOpenNewGame('test_all_prices'))
     return suite
 
 class TestFirstPlayer(TestBlackboxGame):
@@ -149,19 +160,21 @@ class TestRandomGame(TestBlackboxGame):
         print('Visiting game at ' + self.game_path)
         self.driver.get(self.game_path)
         #check if wheel is in title
-        self.assertTrue('Wheel' == self.driver.title)
+        self.assertTrue('Wheel' == self.play_game_util.read_title_value())
 
     def test_get_question(self):
         game_util = PlayGameUtil.GameUtil(self.driver)
         print(game_util.read_player_turn())
         print(game_util.read_state_indicators())
         print(game_util.read_player_info())
+        print(game_util.read_jeopardy_board())
         print(game_util.read_question_info())
-        print(game_util.do_spin_wheel())
-        question_info = game_util.read_question_info()
-        question = question_info['selectedQuestion']
-        category = question_info['selectedCategory']
-        print(game_util.pick_wrong_answer(question,category))
+        while True:
+            print(game_util.do_spin_wheel())
+            question_info = game_util.read_question_info()
+            question = question_info['selectedQuestion']
+            category = question_info['selectedCategory']
+        # print(game_util.pick_wrong_answer(question,category))
     def test_play_game_random(self):
         raise NotImplementedError
 
@@ -176,5 +189,5 @@ if __name__ == '__main__':
     # unittest.main()
     # loader = unittest.TestLoader()
     runner = unittest.TextTestRunner(failfast=True)
-    # runner.run(testsutie_TestOpenNewGame())
+    runner.run(testsutie_TestOpenNewGame())
     runner.run(testsuite_TestRandomGame())

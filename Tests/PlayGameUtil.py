@@ -10,6 +10,8 @@ import os
 from selenium import webdriver
 import time
 
+#import helper functions to control the game
+
 class GameUtil(object):
     def __init__(self, driver, max_player = 3):
         self.driver = driver
@@ -65,7 +67,6 @@ class GameUtil(object):
         spin wheel for current player or specify a player index 0...max_player
     '''
     def do_spin_wheel(self, player_number = None):
-
         if player_number == None:
             #read the board and see who the current player is
             player_number = self.read_player_turn()
@@ -78,21 +79,61 @@ class GameUtil(object):
             return False
 
     '''
+        return if click was sucessful
+        accept answer as correct
+    '''
+    def do_answer_correct(self):
+        correct_button = self.driver.find_element_by_xpath('//*[@id="correctButton"]')
+
+        #if not clickable return error
+        if correct_button.is_enabled():
+            correct_button.click()
+            return True
+        else:
+            return False
+
+    '''
+        return if click was timeExpiredButton
+        click timeExpiredButton
+    '''
+    def do_time_expired(self):
+        expired_button = self.driver.find_element_by_xpath('//*[@id="timeExpiredButton"]')
+
+        #if not clickable return error
+        if expired_button.is_enabled():
+            expired_button.click()
+            return True
+        else:
+            return False
+
+    '''
+        return if click was sucessful
+        accept answer as incorrect
+    '''
+    def do_answer_incorrect(self):
+        incorrect_button = self.driver.find_element_by_xpath('//*[@id="incorrectButton"]')
+
+        # if not clickable return error
+        if incorrect_button.is_enabled():
+            incorrect_button.click()
+            return True
+        else:
+            return False
+
+    '''
         return the state indicators such as current_player_turn, spins_left, round#
     '''
     def read_state_indicators(self):
         state_indicators = {}
-        try:
-            #get each element by id
-            current_player = self.driver.find_element_by_xpath('//*[@id="currentPlayerName"]')
-            spins_left = self.driver.find_element_by_xpath('//*[@id="spinsLeft"]')
-            round_number = self.driver.find_element_by_xpath('//*[@id="roundNumber"]')
-        except:
-            print('Could not find state info')
+
+        #get each element by id
+        current_player = self.driver.find_element_by_xpath('//*[@id="currentPlayerName"]')
+        spins_left = self.driver.find_element_by_xpath('//*[@id="spinsLeft"]')
+        round_number = self.driver.find_element_by_xpath('//*[@id="roundNumber"]')
 
         state_indicators['currentPlayer'] = current_player.text
-        state_indicators['spinsLeft'] = spins_left.text
-        state_indicators['roundNumber'] = round_number.text
+        state_indicators['spinsLeft'] = int(spins_left.text)
+        state_indicators['roundNumber'] = int(round_number.text)
 
         return state_indicators
 
@@ -115,6 +156,22 @@ class GameUtil(object):
         self.question_info = question_info
         return  question_info
 
+    '''
+        return all spinner status enable/disabled
+    '''
+    def read_spiner_status(self):
+        spiner_status = []
+        for i in range(0, self.max_player):
+            try:
+                # get each element by id
+                xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
+                playerSpin = self.driver.find_element_by_xpath(xpath)
+                #add to boolen list if spinner is enabled
+                spiner_status.append(playerSpin.is_enabled())
+            except:
+                print('Could not find state info')
+
+        return spiner_status
 
     '''
         return the current player number 0...to...max_player
@@ -136,7 +193,7 @@ class GameUtil(object):
                         enabled_player = i
             except:
                 print('Could not find state info')
-        print(enabled_player)
+
         #check if we found at least one. If not found, raise exception
         if enabled_player == None:
             raise ValueError
@@ -165,19 +222,60 @@ class GameUtil(object):
             xpath_score = '// *[ @ id = "player{0}Score"]'.format(i)
             xpath_tokens = '// *[ @ id = "player{0}Tokens"]'.format(i)
             player_info = {}
-            try:
-                #get the values
-                player_name = self.driver.find_element_by_xpath(xpath_name)
-                player_score = self.driver.find_element_by_xpath(xpath_score)
-                player_tokens = self.driver.find_element_by_xpath(xpath_tokens)
-                player_info['playerName'] = player_name.text
-                player_info['playerScore'] = player_score.text
-                player_info['playerToken'] = player_tokens.text
-                player_infos.append(player_info)
-            except ValueError:
-                print('Could not find player ' + str(i))
+            # get the values
+            player_name = self.driver.find_element_by_xpath(xpath_name)
+            player_score = self.driver.find_element_by_xpath(xpath_score)
+            player_tokens = self.driver.find_element_by_xpath(xpath_tokens)
+            player_info['playerName'] = player_name.text
+            player_info['playerScore'] = int(player_score.text)
+            player_info['playerToken'] = int(player_tokens.text)
+            player_infos.append(player_info)
+
         return player_infos
 
+    '''
+        read the jeopardy board
+    '''
+    def read_jeopardy_board(self):
+        #get all category buttons
+        category_buttons = []
+        for i in range(0,5):
+            xpath = '//*[@id="categoryButton{0}"]'.format(i)
+            category_button = self.driver.find_element_by_xpath(xpath)
+            category_buttons.append((category_button.text,category_button.is_enabled()))
+
+        all_prices = []
+        #get all prices
+        for i in range(0,5):
+            category_prices = []
+            for j in range(0,5):
+                xpath = '//*[@id="valueC{0}Q{1}"]'.format(i,j)
+                category_price = self.driver.find_element_by_xpath(xpath)
+                category_prices.append(category_price.text)
+            all_prices.append(category_prices)
+
+        board = {}
+        board['categoyButtons'] = category_buttons
+        board['prices'] = all_prices
+        return board
+    '''
+        return the timer value
+    '''
+    def read_timer_value(self):
+        xpath_timer = '//*[@id="timer"]'
+        try:
+            # get the values
+            timer = self.driver.find_element_by_xpath(xpath_timer)
+            timer_value = timer.text
+        except ValueError:
+            print('Could not find timer ')
+        return timer_value
+
+    '''
+        return the title
+    '''
+    def read_title_value(self):
+        return self.driver.title
 
 if __name__ == '__main__':
     pass
