@@ -66,9 +66,7 @@ and open the template in the editor.
             {
                 var catDropDown = document.getElementById("cats");  //  Get category list
                 var opt;
-                var selectedCats = new Array();   //  Will hold all the selected categories
-                var category;
-                var waiter;     // Temp variable used to force the program to wait for the asynchronous call to finish.                
+                var category;           
                 var count = 0;  // The number of categories so far.
                 var questionString; //  Temp variable for the question of each question
                 var answerString;   //  Temp variable for the answer of each question
@@ -83,8 +81,7 @@ and open the template in the editor.
                     
                     if(opt.selected)
                     {  //  If the category is selected, add it to the group
-                        selectedCats.push(opt.value);
-                        questionList = new Array();
+                        questionList = new Array();   //  Reset the questions array
                               
                        var tempor = await (firebase.database().ref("/categories/" + opt.value).once('value').then(function(snapshot)
                         {
@@ -130,7 +127,15 @@ and open the template in the editor.
                 localStorage.setItem('p2',name2);
                 localStorage.setItem('p3',name3);
                 
-                window.open("index.html");
+                if(catList.length == 12)
+                {  //  12 categories selected
+                    window.open("index.html");
+                }
+                else
+                { //  Not 12 categories selected
+                    window.alert("Error - Please select 12 categories.");
+                    catList = new Array();    //  Reset the catList array
+                }
             }
                   
     </script>

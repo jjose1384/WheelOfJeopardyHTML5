@@ -36,9 +36,7 @@
                 var playerList = [player0, player1, player2];
                 
                 var cats = JSON.parse(localStorage.getItem('board1'));
-                window.alert("here");
-                window.alert(cats[0].questionsList[cats[0].selectedQuestionIndex].questionText);
-                
+                                
                 // default categories: values are set in gameController.js
                 var category6 = new Category("", "");
                 var category7 = new Category("", "");
@@ -47,7 +45,7 @@
                 var category10 = new Category("", "");
                 var category11 = new Category("", "");
                 
-                // Round 1
+                /* // Round 1
                 // questions List category0
                 var c0q0 = new Question('c0q01111111111111111111 111111111111111111111111 11111111111111111111111111111 11111111111111111111111', 'c0a0', 200);
                 var c0q1 = new Question('c0q1', 'c0a1', 400);
@@ -104,8 +102,8 @@
                 var category3 = new Category(category3QuestionsList, "Category 3");
                 var category4 = new Category(category4QuestionsList, "Category 4");
                 var category5 = new Category(category5QuestionsList, "Category 5");
-                
-                var categoryList = [category0, category1, category2, category3, category4, category5,
+                */
+                var categoryList = [cats[0], cats[1], cats[2], cats[3], cats[4], cats[5],
                                     category6, category7, category8, category9, category10, category11];
                 
                 var wheel = 
@@ -141,11 +139,12 @@
                 console.log("--> createGameControllerR2 running");
                 
                 // list of players
-                var player0 = new Player("A");
-                var player1 = new Player("B");
-                var player2 = new Player("C");
+                var player0 = new Player(localStorage.getItem("p1"));
+                var player1 = new Player(localStorage.getItem("p2"));
+                var player2 = new Player(localStorage.getItem("p3"));
                 var playerList = [player0, player1, player2];
                 
+                var cats = JSON.parse(localStorage.getItem('board1'));
                 
                 // default categories: values are set in gameController.js
                 var category6 = new Category("", "");
@@ -155,7 +154,7 @@
                 var category10 = new Category("", "");
                 var category11 = new Category("", "");
                 
-                // Round 2
+                /*// Round 2
                 // questions List category0
                 var c0q0 = new Question('c0q01111111111111111111 111111111111111111111111 11111111111111111111111111111 11111111111111111111111', '', 400);
                 var c0q1 = new Question('c0q1', '', 800);
@@ -212,8 +211,8 @@
                 var category3 = new Category(category3QuestionsList, "Category D");
                 var category4 = new Category(category4QuestionsList, "Category E");
                 var category5 = new Category(category5QuestionsList, "Category F");
-                
-                var categoryList = [category0, category1, category2, category3, category4, category5,
+                */
+                var categoryList = [cats[6], cats[7], cats[8], cats[9], cats[10], cats[11],
                                     category6, category7, category8, category9, category10, category11];
                 
                 var wheel = 
