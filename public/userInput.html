@@ -91,15 +91,13 @@ and open the template in the editor.
                         
                        var tempor = await (firebase.database().ref("/categories/" + opt.value).once('value').then(function(snapshot)
                         {
-                            window.alert("inside" + opt.value);
                             pointValue = 1; 
                                                    
                             snapshot.forEach(function(childSnapshot)
                             {  // For each question
                                 questionString = new String(childSnapshot.child("question").val());
                                 answerString = new String(childSnapshot.child("answer").val());
-                                window.alert(questionString + " " + pointValue);
-                               
+                                                         
                                 if(count < 6)
                                 {  //  Jeopardy round question
                                      questionObj = new Question(questionString, answerString, pointValue* 200);
@@ -116,11 +114,8 @@ and open the template in the editor.
                         }).then(function()
                         {
                             category = new Category(questionList, opt.value);  
-                            window.alert(opt.value + " pushed");
                             catList.push(category);
-                            
-                            window.alert("new cat generated" + opt.value);
-                            
+                                                        
                             count = count + 1;   //  increment the category count.   
                         }));               
                     }
@@ -129,54 +124,19 @@ and open the template in the editor.
                 window.alert(catList[0].title);
                 await localStorage.setItem('board1', JSON.stringify(catList));
                 
+               
+                //  load names
+                var name1 = document.getElementById("p1Name").value;
+                var name2 = document.getElementById("p2Name").value;
+                var name3 = document.getElementById("p3Name").value;
+                
+                localStorage.setItem('p1',name1);
+                localStorage.setItem('p2',name2);
+                localStorage.setItem('p3',name3);
+                
                 window.open("index.html");
             }
-            
-            function inProcessCategory(catName, count)
-            {
-                var questionString; //  Temp variable for the question of each question
-                var answerString;   //  Temp variable for the answer of each question
-                var questionObj;    //  Will hold the question object for each newly created question.
-                var pointValue;
-                var category;       //  Temp variable to hold the newly created category.
-                window.alert("i made it!");
-                firebase.database().ref("/categories/" + catName).once('value').then(function(snapshot)
-                {
-                    window.alert("inside" + catName);
-                    pointValue = 1; 
-                                                   
-                    snapshot.forEach(function(childSnapshot)
-                    {  // For each question
-                        questionString = new String(childSnapshot.child("question").val());
-                        answerString = new String(childSnapshot.child("answer").val());
-                        window.alert(questionString + " " + pointValue);
-                               
-                        if(count < 6)
-                        {  //  Jeopardy round question
-                            questionObj = new Question(questionString, answerString, pointValue* 200);
-                        }
-                        else
-                        {
-                            questionObj = new Question(questionString, answerString, (pointValue * 400));
-                        }
-                                
-                            questions.push(questionObj);    //  Add the question to the list
-                            pointValue = pointValue + 1;  // Increment the point value
-                                
-                    }); 
-                }).then(function()
-                {
-                    category = new Category(questions, opt.value);  
-                    window.alert(opt.value + " pushed");
-                    categories.push(category);
-                            
-                    window.alert("new cat generated" + opt.value);
-                });  
-                
-                return true;
-            }
-            
-                       
+                  
     </script>
     </head>
     <body>
@@ -195,9 +155,9 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                            Player 1 Name:  <input type="text" name="p1Name" value="Enter Name" size="50" /></br>
-                            Player 2 Name:  <input type="text" name="p2Name" value="Enter Name" size="50" /></br>
-                            Player 3 Name:  <input type="text" name="p3Name" value="Enter Name" size="50" /></br>
+                            Player 1 Name:  <input type="text" id="p1Name" name="p1Name" value="Enter Name" size="50" /></br>
+                            Player 2 Name:  <input type="text" id="p2Name" name="p2Name" value="Enter Name" size="50" /></br>
+                            Player 3 Name:  <input type="text" id="p3Name" name="p3Name" value="Enter Name" size="50" /></br>
                         </td>
                     </tr>
                     <tr>

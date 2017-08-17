@@ -30,9 +30,9 @@
             function createGameControllerR1()
             {   
                 // list of players
-                var player0 = new Player("A");
-                var player1 = new Player("B");
-                var player2 = new Player("C");
+                var player0 = new Player(localStorage.getItem("p1"));
+                var player1 = new Player(localStorage.getItem("p2"));
+                var player2 = new Player(localStorage.getItem("p3"));
                 var playerList = [player0, player1, player2];
                 
                 var cats = JSON.parse(localStorage.getItem('board1'));

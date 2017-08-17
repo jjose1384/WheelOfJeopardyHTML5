@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-messaging.js"></script>      
+        <script src="category.js"></script>
+        <script src="question.js"></script>
+        <script src="board.js"></script>
+        
+        <script>
+            
+            
+            
+            
+        </script>
+    </head>
+    <body>
+        <form name="addCat">
+            <table border="1" cellpadding="3">
+                <thead>
+                    <tr>
+                        <img src="img/Wheel of Jeopardy.png" width="500" height="250" alt="Wheel of Jeopardy"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align = "center">
+                            Setup - Please enter the following information.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Player 1 Name:  <input type="text" name="p1Name" value="Enter Name" size="50" /></br>
+                            Player 2 Name:  <input type="text" name="p2Name" value="Enter Name" size="50" /></br>
+                            Player 3 Name:  <input type="text" name="p3Name" value="Enter Name" size="50" /></br>
+                        </td>
+                    </tr>
+                    <tr>
+                         <td >
+                             Please select 12 categories from the list below </br>
+                             <select id="cats" name="cats" multiple="multiple"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                         <input type="button" value="Start Game" name="startGame" onclick="getCategories()" />
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <div>TODO write content</div>
+    </body>
+</html>
