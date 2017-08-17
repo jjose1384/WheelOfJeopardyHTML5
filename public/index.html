@@ -45,7 +45,7 @@
                 var category10 = new Category("", "");
                 var category11 = new Category("", "");
                 
-                /*
+                
                 // Round 1
                 // questions List category0
                 var c0q0 = new Question('c0q01111111111111111111 111111111111111111111111 11111111111111111111111111111 11111111111111111111111', 'c0a0', 200);
@@ -96,23 +96,21 @@
                 var category5QuestionsList = [c5q0, c5q1, c5q2, c5q3, c5q4];
                 
                 
-                // dynamic categories
+                /*// dynamic categories
                 var category0 = new Category(category0QuestionsList, "Category 0");
                 var category1 = new Category(category1QuestionsList, "Category 1");
                 var category2 = new Category(category2QuestionsList, "Category 2");
                 var category3 = new Category(category3QuestionsList, "Category 3");
                 var category4 = new Category(category4QuestionsList, "Category 4");
-                var category5 = new Category(category5QuestionsList, "Category 5"); 
-                */
+                var category5 = new Category(category5QuestionsList, "Category 5"); */
+                
                var category0 = new Category(cats[0].questionsList, cats[0].title);
                var category1 = new Category(cats[1].questionsList, cats[1].title);
                var category2 = new Category(cats[2].questionsList, cats[2].title);
                var category3 = new Category(cats[3].questionsList, cats[3].title);
                var category4 = new Category(cats[4].questionsList, cats[4].title);
                var category5 = new Category(cats[5].questionsList, cats[5].title);
-                
-               // var categoryList = [cats[0], cats[1], cats[2], cats[3], cats[4], cats[5],
-                                 //  category6, category7, category8, category9, category10, category11];
+ 
               var categoryList = [category0, category1, category2, category3, category4, category5,
                                    category6, category7, category8, category9, category10, category11];
                 var wheel = 
@@ -163,9 +161,9 @@
                 var category10 = new Category("", "");
                 var category11 = new Category("", "");
                 
-                /*// Round 2
+                // Round 2
                 // questions List category0
-                var c0q0 = new Question('c0q01111111111111111111 111111111111111111111111 11111111111111111111111111111 11111111111111111111111', '', 400);
+                var c0q0 = new Question(cats[0].questionsList[0].questionText, cats[1].questionsList[0].answerText, 400);
                 var c0q1 = new Question('c0q1', '', 800);
                 var c0q2 = new Question('c0q2', '', 1200);
                 var c0q3 = new Question('c0q3', '', 1600);
@@ -211,7 +209,7 @@
                 var c5q3 = new Question('c5q3', '', 1600);
                 var c5q4 = new Question('c5q4', '', 2000);
                 var category5QuestionsList = [c5q0, c5q1, c5q2, c5q3, c5q4];
-                */
+                
                 
                var category0 = new Category(cats[6].questionsList, cats[6].title);
                var category1 = new Category(cats[7].questionsList, cats[7].title);

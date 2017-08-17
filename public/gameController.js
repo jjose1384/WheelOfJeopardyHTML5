@@ -132,7 +132,6 @@ GameController.prototype = {
         
         if (self.board.selectedCategory !== null)
         {
-            window.alert("inside selected question.")
             document.getElementById(outputId).textContent = self.board.selectedCategory.selectedQuestion.questionText; // display question
         }
         else
@@ -368,7 +367,6 @@ GameController.prototype = {
         } 
         else // one of the jeopardy categories selected
         {
-            window.alert("got in isCategoryAvailable");
             if (self.board.selectedCategory.isCategoryAvailable())
             {
                 
@@ -501,6 +499,7 @@ GameController.prototype = {
 
         
         self.board.selectedCategory.incrementSelectedQuestion();
+        
         self.enableSpinButton(self.currentPlayerIndex);
         
         // check for end of round
