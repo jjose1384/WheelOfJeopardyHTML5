@@ -24,7 +24,7 @@
             function initialize()
             {
                 createGameControllerR1();
-                window.open("userInput.html");
+                //window.open("userInput.html");
             }
             
             function createGameControllerR1()
@@ -35,6 +35,9 @@
                 var player2 = new Player("C");
                 var playerList = [player0, player1, player2];
                 
+                var cats = JSON.parse(localStorage.getItem('board1'));
+                window.alert("here");
+                window.alert(cats[0].questionsList[cats[0].selectedQuestionIndex].questionText);
                 
                 // default categories: values are set in gameController.js
                 var category6 = new Category("", "");

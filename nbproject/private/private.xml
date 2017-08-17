@@ -3,9 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Corby/OneDrive/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/gameController.js</file>
-            <file>file:/C:/Users/Corby/OneDrive/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/index.html</file>
-            <file>file:/C:/Users/Corby/OneDrive/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/userInput.html</file>
+            <file>file:/C:/Users/Corby/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/board.js</file>
+            <file>file:/C:/Users/Corby/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/question.js</file>
+            <file>file:/C:/Users/Corby/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/userInput.html</file>
+            <file>file:/C:/Users/Corby/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/category.js</file>
+            <file>file:/C:/Users/Corby/Documents/NetBeansProjects/WheelOfJeopardyHTML5/public/index.html</file>
         </group>
     </open-files>
 </project-private>
