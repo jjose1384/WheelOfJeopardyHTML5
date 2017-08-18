@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Add Category</title>
+        <title>Update/Delete Category</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
@@ -46,6 +46,7 @@ and open the template in the editor.
                 var query = firebase.database().ref("categories").orderByKey();
                 var newCat = document.createElement("option");
                 
+                
                 query.once("value").then(function(snapshot) 
                 {
                     snapshot.forEach(function(childSnapshot)
@@ -64,24 +65,44 @@ and open the template in the editor.
             async function loadData()
             {
                 var selectedCat = document.getElementById("cats");
-                answers = new Array();
-                questions = new Array();
+                var catTitle = selectedCat.options[selectedCat.selectedIndex].value;
+                var answers = new Array();
+                var questions = new Array();
+                var questionString;
+                var answerString;
                 
-                await firebase.database().ref("/categories/" + selectedCat.options[selectedCat.selectedIndex].value).once("value").then(function(snaphot)
-                {
-                       snapshot.forEach(function(childSnapshot)
-                       {
-                           window.alert(String(childSnapshot.child.child("question")));
-                           questions.push(Object.keys(childSnapshot.child)[0]);
-                           document.getElementById("q1").value = questions[0];
-                       });
-                });
+                var tempor = await (firebase.database().ref("/categories/" + catTitle).once('value').then(function(snapshot)
+                {                                             
+                    snapshot.forEach(function(childSnapshot)
+                    {  // For each question
+                        questionString = new String(childSnapshot.child("question").val());
+                        answerString = new String(childSnapshot.child("answer").val());
+                                                
+                        questions.push(questionString);
+                        answers.push(answerString);
+                                 
+                    });
+                }));               
+                
+                // load questions and answers in input text boxes.
+                document.getElementById("q1").value = questions[0];
+                document.getElementById("a1").value = answers[0];
+                document.getElementById("q2").value = questions[1];
+                document.getElementById("a2").value = answers[1];
+                document.getElementById("q3").value = questions[2];
+                document.getElementById("a3").value = answers[2];
+                document.getElementById("q4").value = questions[3];
+                document.getElementById("a4").value = answers[3];
+                document.getElementById("q5").value = questions[4];
+                document.getElementById("a5").value = answers[4];
+                
             }
             
             async function updateCat()
             {
-                var catTitle = document.getElementById("title").value;
-                var newCat = firebase.database().ref("/categories/");
+                var selectedCat = document.getElementById("cats");
+                var catTitle = selectedCat.options[selectedCat.selectedIndex].value;
+                var newCat = firebase.database().ref("/categories");
                 
                 newCat.child(catTitle).set({
                     question1:
@@ -108,15 +129,43 @@ and open the template in the editor.
                     {
                         question: document.getElementById("q5").value,
                         answer: document.getElementById("a5").value
-                    },
+                    }
                 });
                 
-                function deleteCat()
-                {
-                    
-                }
-                
+                window.alert(catTitle + " updated");
             }
+            async function deleteCat()
+            {
+                var catList = document.getElementById("cats");
+                var catTitle = catList.options[catList.selectedIndex].value;
+                var newCat = firebase.database().ref("/categories");
+                
+                var temp = await (newCat.child(catTitle).remove());   //  delete the category from the db.
+                
+                catList.remove(catList.selectedIndex);
+                catList.selectedIndex = 0;  //  Set selected to 0
+               
+                // loadCategories();   // Reload the categories
+                
+                //  Update question boxes
+                document.getElementById("q1").value = "Enter question";
+                document.getElementById("q2").value = "Enter question";
+                document.getElementById("q3").value = "Enter question";
+                document.getElementById("q4").value = "Enter question";
+                document.getElementById("q5").value = "Enter question";
+                
+                // Update answer boxes
+                document.getElementById("a1").value = "Enter answer";
+                document.getElementById("a2").value = "Enter answer";
+                document.getElementById("a3").value = "Enter answer";
+                document.getElementById("a4").value = "Enter answer";
+                document.getElementById("a5").value = "Enter answer";
+                
+              
+                window.alert(catTitle + " deleted.");
+            }
+                
+            
     </script>
     </head>
     <body>
@@ -124,7 +173,7 @@ and open the template in the editor.
             <table border="1" cellpadding="3">
                 <thead>
                     <tr>
-                        <td align="center" border="0">
+                        <td align="center">
                             <img src="img/logo.jpg" width="300" height="150" alt="Wheel of Jeopardy"/>
                         </td>
                     </tr>
@@ -139,12 +188,6 @@ and open the template in the editor.
                          <td >
                              Please select 12 categories from the list below </br>
                              <select id="cats" name="cats" onchange="loadData()"></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Category Title: <input type="text" id="title" name="title" value="Enter title" size="50" /></br>
-                            </br>
                         </td>
                     </tr>
                     <tr>
