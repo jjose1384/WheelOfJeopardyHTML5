@@ -1,22 +1,37 @@
 import unittest
 import os
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
 import random
-
+import time
 #wrapper help functions to control the browser
 import PlayGameUtil
-
+import logging
 
 '''
     The TestBlackboxGame class is the base and used for setup
-    
+
     Then testsuite is used because Unittest execute the test cases in alphabetical order
     Testsuite can specify the test cases to run in a certain order. This will come in handy
     when testing the game play flow.
 '''
+
+#setting up the logging for test results
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+handler = logging.FileHandler('test_black_box.log')
+handler.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+logger.addHandler(handler)
+
 
 #basic test suite. Creates a webdriver and a PlayGameUtil object to be used for interating with game
 class TestBlackboxGame(unittest.TestCase):
@@ -33,13 +48,15 @@ class TestBlackboxGame(unittest.TestCase):
         #adding open maximized option
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
-        cls.driver = webdriver.Chrome(chrome_options=options)
-
+        # cls.driver = webdriver.Chrome(chrome_options=options)
+        cls.driver = webdriver.Firefox()
+        cls.driver.get('file:///' + cls.game_path)
         cls.play_game_util = PlayGameUtil.GameUtil(cls.driver, cls.max_players)
 
     #ran once after testing is done
     @classmethod
     def tearDownClass(cls):
+        pass
         cls.driver.quit()
 
     #setUp, ran once before each test
@@ -127,10 +144,17 @@ class TestOpenNewGame(TestBlackboxGame):
         board = self.play_game_util.read_jeopardy_board()
         prices = board['prices']
 
-        #make sure each price is 200+i*200, where i is the row starting from zero
+        #make sure each price is 200+i*200 and is present, where i is the row starting from zero
         for column in prices:
             for row,price in enumerate(column):
                 self.assertEqual(price, '${0}'.format(200+row*200))
+
+    def test_category_not_clickable(self):
+        board = self.play_game_util.read_jeopardy_board()
+
+        for category in board['categoyButtons']:
+            text,is_enabled = category
+            self.assertFalse(is_enabled)
 
 #suite used to run the TestOpenNewGame in order
 def testsutie_TestOpenNewGame():
@@ -156,38 +180,113 @@ class TestFirstPlayer(TestBlackboxGame):
             assert(self.driver.find_element_by_id(spin_id))
 
 class TestRandomGame(TestBlackboxGame):
-    def test_game_started(self):
-        print('Visiting game at ' + self.game_path)
-        self.driver.get(self.game_path)
-        #check if wheel is in title
-        self.assertTrue('Wheel' == self.play_game_util.read_title_value())
+    def test_random_game(self):
+        # logger.info('Starting New Random Game Test ')
+        # # logger.info('Visiting game at ' + self.game_path)
+        # self.driver.get(self.game_path)
+        # # check if wheel is in title
+        # self.assertTrue('Wheel' == self.play_game_util.read_title_value())
+        logger.info('Setting test_spins_left to 50')
+        test_spins_left = 50
 
-    def test_get_question(self):
-        game_util = PlayGameUtil.GameUtil(self.driver)
-        print(game_util.read_player_turn())
-        print(game_util.read_state_indicators())
-        print(game_util.read_player_info())
-        print(game_util.read_jeopardy_board())
-        print(game_util.read_question_info())
+        players_info = self.play_game_util.read_player_info()
+
         while True:
-            print(game_util.do_spin_wheel())
-            question_info = game_util.read_question_info()
-            question = question_info['selectedQuestion']
-            category = question_info['selectedCategory']
-        # print(game_util.pick_wrong_answer(question,category))
-    def test_play_game_random(self):
-        raise NotImplementedError
+            #get current player index
+            current_player = self.play_game_util.read_player_turn()
+            #read the player name
+            current_player_name = players_info[current_player]['playerName']
+
+            #spin the current player, wait 10 seconds for it to land
+            self.play_game_util.do_spin_wheel()
+
+            #get the question info and spin result
+            question_info = self.play_game_util.read_question_info()
+            spin_result = question_info['selectedCategory']
+
+            logger.info('{0} spin : {1}'.format(current_player_name,spin_result))
+
+            #check if the spin resulted in a message box
+            if self.play_game_util.is_game_message_present():
+                #try read message box, if enabled or not
+                game_message_box = self.play_game_util.read_game_message()
+                if game_message_box:
+                    message = game_message_box['message']
+                    logger.info('Message box: {0}'.format(message))
+
+                    startRound2_button = self.driver.find_element_by_xpath('//*[@id="startRound2"]')
+                    ok_button = self.driver.find_element_by_xpath('//*[@id="ok"]')
+
+                    if ok_button.is_enabled() and ok_button.is_displayed():
+                        ok_button.click()
+                    if startRound2_button.is_enabled() and startRound2_button.is_displayed():
+                        time.sleep(1000)
+                        startRound2_button.click()
+
+                    #check if the message is about player or opponents choice
+                    if ('\'s Choice' in message):
+                        #make sure jeopardy_board is clickable
+                        self.assertTrue(self.play_game_util.is_jeopardy_board_clickable())
+                        self.play_game_util.do_select_random_categoy()
+
+                        question_info = self.play_game_util.read_question_info()
+                        question = question_info['selectedQuestion']
+                        category = question_info['selectedCategory']
+                        logger.info(': {0}'.format(message))
+
+            #Check for answer prompt
+            if self.play_game_util.is_select_answer_present():
+
+                question_info = self.play_game_util.read_question_info()
+                question = question_info['selectedQuestion']
+                category = question_info['selectedCategory']
+                #log the information
+                logger.info(u'Question: {0}'.format(question))
+                logger.info(u'Category: {0}'.format(category))
+
+                #randomly pick if correct or incorrect
+                random_answer = [True,False]
+                answer = random.choice(random_answer)
+                if answer:
+                    logger.info('Player answered correct!')
+                    self.play_game_util.do_answer_correct()
+                else:
+                    logger.info('Player answered incorrect!')
+                    self.play_game_util.do_answer_incorrect()
+            time.sleep(1)
+            #Check token use prompt
+            if self.play_game_util.is_use_token_popup_present():
+                use_token_random = [True, False]
+                use_token = random.choice(use_token_random)
+                if use_token:
+                    self.play_game_util.do_use_token_yes()
+                    logger.info('{0} : {1}'.format(current_player_name, message))
+                    logger.info('{0} : selected to use free spin token'.format(current_player_name))
+                else:
+                    self.play_game_util.do_use_token_no()
+                    logger.info('{0} : {1}'.format(current_player_name, message))
+                    logger.info('{0} : selected not to use free spin token'.format(current_player_name))
+
+            #each spin should decreemnt spins left
+            test_spins_left = test_spins_left-1
+
+            #read game and get spins left
+            state_indecators = self.play_game_util.read_state_indicators()
+            actual_spins = state_indecators['spinsLeft']
+
+            #test actual and test spins left
+            self.assertEqual(actual_spins,test_spins_left)
+
 
 def testsuite_TestRandomGame():
     suite = unittest.TestSuite()
-    suite.addTest(TestRandomGame('test_game_started'))
-    suite.addTest(TestRandomGame('test_get_question'))
-    # suite.addTest(TestRandomGame('test_play_game_random'))
+    # suite.addTest(TestRandomGame('test_game_started'))
+    suite.addTest(TestRandomGame('test_random_game'))
     return suite
 
 if __name__ == '__main__':
     # unittest.main()
     # loader = unittest.TestLoader()
     runner = unittest.TextTestRunner(failfast=True)
-    runner.run(testsutie_TestOpenNewGame())
+    # runner.run(testsutie_TestOpenNewGame())
     runner.run(testsuite_TestRandomGame())

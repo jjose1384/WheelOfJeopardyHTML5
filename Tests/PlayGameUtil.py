@@ -4,12 +4,13 @@ connecting to database to pick right answer or picking the wrong answer,
 and spinng.
 '''
 
-from random import randint
+import random
 import json
 import os
 from selenium import webdriver
 import time
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 #import helper functions to control the game
 
 class GameUtil(object):
@@ -51,7 +52,7 @@ class GameUtil(object):
     #return a random number to pick a random answer choice
     def pick_random_answer(self):
         raise NotImplementedError
-        return randint(0,4)
+        return random.randint(0,4)
 
     #should connect to database and retrun a choice that is not the right answer
     def pick_wrong_answer(self, question, category):
@@ -70,12 +71,28 @@ class GameUtil(object):
         if player_number == None:
             #read the board and see who the current player is
             player_number = self.read_player_turn()
-        try:
             self.driver.find_element_by_xpath('// *[ @ id = "player{0}Spin"]'.format(player_number)).click()
             #wait for wheel to stop spinning. timeout + 1
-            time.sleep(11)
+            WebDriverWait(self.driver, 11).until(
+                lambda driver: driver.find_element(By.ID, "incorrectButton").is_enabled()
+                               or driver.find_element(By.ID, "correctButton").is_enabled()
+                               or driver.find_element(By.ID, "messageModal").is_displayed()
+                               or driver.find_element(By.ID, "gameMessage").is_displayed()
+                               or driver.find_element(By.ID, "useTokenModal").is_displayed())
+        return True
+
+    '''
+        return if click was sucessful
+        accept answer as incorrect
+    '''
+    def do_answer_incorrect(self):
+        incorrect_button = self.driver.find_element_by_xpath('//*[@id="incorrectButton"]')
+
+        # if not clickable return error
+        if incorrect_button.is_enabled():
+            incorrect_button.click()
             return True
-        except:
+        else:
             return False
 
     '''
@@ -92,6 +109,7 @@ class GameUtil(object):
         else:
             return False
 
+
     '''
         return if click was timeExpiredButton
         click timeExpiredButton
@@ -107,18 +125,45 @@ class GameUtil(object):
             return False
 
     '''
-        return if click was sucessful
-        accept answer as incorrect
+        return if answer select screen
     '''
-    def do_answer_incorrect(self):
+    def is_select_answer_present(self):
         incorrect_button = self.driver.find_element_by_xpath('//*[@id="incorrectButton"]')
-
-        # if not clickable return error
-        if incorrect_button.is_enabled():
-            incorrect_button.click()
+        correct_button = self.driver.find_element_by_xpath('//*[@id="correctButton"]')
+        expired_button = self.driver.find_element_by_xpath('//*[@id="timeExpiredButton"]')
+        if incorrect_button.is_enabled() or correct_button.is_enabled() or expired_button.is_enabled():
             return True
         else:
             return False
+    '''
+        click on a random categorybutton
+    '''
+    def do_select_random_categoy(self):
+        #get element of id = categoryButtonId
+        board = self.read_jeopardy_board()
+        categoryButtons = board['categoyButtons']
+
+        #get index of all category buttons that are enabled
+        enabled_buttons = []
+        for index,categoryButton in enumerate(categoryButtons):
+            name,is_enabled = categoryButton
+            if is_enabled:
+                enabled_buttons.append(index)
+        random_button_number = random.choice(enabled_buttons)
+        self.do_select_categoy('categoryButton{0}'.format(random_button_number))
+        return True
+
+    '''
+        click on categorybutton
+    '''
+    def do_select_categoy(self, categoryButtonId):
+        wait = WebDriverWait(self.driver, 5)
+        #get element of id = categoryButtonId
+        xpath = '//*[@id="{0}"]'.format(categoryButtonId)
+        categoryButton = self.driver.find_element_by_xpath(xpath)
+        if categoryButton.is_enabled() and categoryButton.is_displayed():
+            categoryButton.click()
+        return True
 
     '''
         return the state indicators such as current_player_turn, spins_left, round#
@@ -142,12 +187,9 @@ class GameUtil(object):
     '''
     def read_question_info(self):
         question_info = {}
-        try:
-            selected_category = self.driver.find_element_by_xpath('//*[@id="selectedCategory"]')
-            selected_question = self.driver.find_element_by_xpath('//*[@id="selectedQuestion"]')
-            answer = self.driver.find_element_by_xpath('//*[@id="answer"]')
-        except:
-            print('Could not find state info')
+        selected_category = self.driver.find_element_by_xpath('//*[@id="selectedCategory"]')
+        selected_question = self.driver.find_element_by_xpath('//*[@id="selectedQuestion"]')
+        answer = self.driver.find_element_by_xpath('//*[@id="answer"]')
 
         question_info['selectedCategory'] = selected_category.text
         question_info['selectedQuestion'] = selected_question.text
@@ -180,19 +222,16 @@ class GameUtil(object):
     def read_player_turn(self):
         enabled_player = None
         for i in range(0, self.max_player):
-            try:
-                # get each element by id
-                xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
-                playerSpin = self.driver.find_element_by_xpath(xpath)
-                #set enabled_player to i if their spin is enabled
-                if playerSpin.is_enabled():
-                    if enabled_player:
-                        #found multiple player with spin enabled
-                        raise ValueError
-                    else:
-                        enabled_player = i
-            except:
-                print('Could not find state info')
+            # get each element by id
+            xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
+            playerSpin = self.driver.find_element_by_xpath(xpath)
+            #set enabled_player to i if their spin is enabled
+            if playerSpin.is_enabled():
+                if enabled_player:
+                    #found multiple player with spin enabled
+                    raise ValueError
+                else:
+                    enabled_player = i
 
         #check if we found at least one. If not found, raise exception
         if enabled_player == None:
@@ -234,9 +273,24 @@ class GameUtil(object):
         return player_infos
 
     '''
+        return if the jeopardy board category is clickable
+    '''
+    def is_jeopardy_board_clickable(self):
+        for i in range(0,5):
+            xpath = '//*[@id="categoryButton{0}"]'.format(i)
+            category_button = self.driver.find_element_by_xpath(xpath)
+            #if one of the category is not clickable return False
+            if (not category_button.is_enabled()) or (not category_button.is_displayed()):
+                return False
+
+        #all is clickable return True
+        return True
+
+    '''
         read the jeopardy board
     '''
     def read_jeopardy_board(self):
+
         #get all category buttons
         category_buttons = []
         for i in range(0,5):
@@ -258,6 +312,7 @@ class GameUtil(object):
         board['categoyButtons'] = category_buttons
         board['prices'] = all_prices
         return board
+
     '''
         return the timer value
     '''
@@ -277,5 +332,65 @@ class GameUtil(object):
     def read_title_value(self):
         return self.driver.title
 
+    '''
+        return if game message box is present
+    '''
+    def is_game_message_present(self):
+        # wait = WebDriverWait(self.driver, 1)
+        game_message_dialog = self.driver.find_element_by_xpath('//*[@id="messageModal"]')
+        return game_message_dialog.is_displayed()
+
+    '''
+        return game message box information such as message and buttons (selenium element)
+    '''
+    def read_game_message(self):
+        # wait = WebDriverWait(self.driver, 1)
+        if self.is_game_message_present():
+            game_message_box = {}
+            game_message = self.driver.find_element_by_xpath('//*[@id="gameMessage"]')
+            game_message_text = game_message.text
+            game_message_box['message'] = game_message_text
+
+            #buttons section
+            button_footer = self.driver.find_elements_by_class_name('modal-footer')
+            buttons = []
+            for button in button_footer:
+                buttons.append(button)
+            game_message_box['buttons'] = buttons
+
+            return game_message_box
+        else:
+            return None
+
+
+    '''
+        return if use token pupup is present
+    '''
+    def is_use_token_popup_present(self):
+        time.sleep(2)
+        popup_header_dialog = self.driver.find_element_by_xpath('//*[@id="useTokenModal"]')
+        return popup_header_dialog.is_displayed()
+
+    '''
+        click yes on using free token
+    '''
+    def do_use_token_yes(self):
+        yes_button = self.driver.find_element_by_xpath('//*[@id="useTokenYes"]')
+        if yes_button.is_enabled() and yes_button.is_displayed():
+            yes_button.click()
+            return True
+        else:
+            return False
+
+    '''
+        click no on using free token
+    '''
+    def do_use_token_no(self):
+        no_button = self.driver.find_element_by_xpath('//*[@id="useTokenNo"]')
+        if no_button.is_enabled() and no_button.is_displayed():
+            no_button.click()
+            return True
+        else:
+            return False
 if __name__ == '__main__':
     pass
