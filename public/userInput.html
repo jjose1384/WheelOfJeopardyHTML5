@@ -137,6 +137,11 @@ and open the template in the editor.
                     catList = new Array();    //  Reset the catList array
                 }
             }
+            
+            function openAddCat()
+            {
+                window.open("addCategory.html");
+            }
                   
     </script>
     </head>
@@ -145,7 +150,7 @@ and open the template in the editor.
             <table border="1" cellpadding="3">
                 <thead>
                     <tr>
-                        <img src="img/Wheel of Jeopardy.png" width="500" height="250" alt="Wheel of Jeopardy"/>
+                        <img src="img/logo.jpg" width="480" height="240" alt="Wheel of Jeopardy"/>
                     </tr>
                 </thead>
                 <tbody>
@@ -170,6 +175,11 @@ and open the template in the editor.
                     <tr>
                         <td>
                              <input type="button" value="Start Game" name="startGame" onclick="getCategories()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                             <input type="button" value="Add Category" name="addCat" onclick="openAddCat()" />
                         </td>
                     </tr>
                 </tbody>

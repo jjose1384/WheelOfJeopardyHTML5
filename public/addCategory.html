@@ -38,37 +38,39 @@ and open the template in the editor.
                 firebase.initializeApp(config);
             }
             
-            function addCat()
+            async function addCat()
             {
-                var catTitle = document.getElementByName("title").value;
-                window.alert("start addition");
+                var catTitle = document.getElementById("title").value;
+                var newCat = firebase.database().ref("/categories");
                 
-                firebase.database().ref('/categories/' + catTitle + "/question1").set({
-                    question: document.getElementByName("q1").value,
-                    answer: document.getElementByName("a1").value
-                });
-                                
-                firebase.database().ref('/categories/' + catTitle + "/question2").set({
-                    question: document.getElementByName("q2").value,
-                    answer: document.getElementByName("a2").value
+                newCat.child(catTitle).set({
+                    question1:
+                    {
+                        question: document.getElementById("q1").value,
+                        answer: document.getElementById("a1").value
+                    },
+                    question2:
+                    {
+                        question: document.getElementById("q2").value,
+                        answer: document.getElementById("a2").value
+                    },
+                    question3:
+                    {
+                        question: document.getElementById("q3").value,
+                        answer: document.getElementById("a3").value
+                    },
+                    question4:
+                    {
+                        question: document.getElementById("q4").value,
+                        answer: document.getElementById("a4").value
+                    },
+                    question5:
+                    {
+                        question: document.getElementById("q5").value,
+                        answer: document.getElementById("a5").value
+                    },
                 });
                 
-                firebase.database().ref('/categories/' + catTitle + "/question3").set({
-                    question: document.getElementByName("q3").value,
-                    answer: document.getElementByName("a3").value
-                });
-                
-                firebase.database().ref('/categories/' + catTitle + "/question4").set({
-                    question: document.getElementByName("q4").value,
-                    answer: document.getElementByName("a4").value
-                });
-                
-                firebase.database().ref('/categories/' + catTitle + "/question5").set({
-                    question: document.getElementByName("q5").value,
-                    answer: document.getElementByName("a5").value
-                });
-                
-                window.alert("Success");
             }
     </script>
     </head>
@@ -76,8 +78,10 @@ and open the template in the editor.
         <form name="userInput">
             <table border="1" cellpadding="3">
                 <thead>
-                    <tr align="center">
-                        <img src="img/logo.jpg" width="300" height="150" alt="Wheel of Jeopardy"/>
+                    <tr>
+                        <td align="center" border="0">
+                            <img src="img/logo.jpg" width="300" height="150" alt="Wheel of Jeopardy"/>
+                        </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,26 +92,26 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                            Category Title: <input type="text" name="title" value="Enter title" size="50" /></br>
+                            Category Title: <input type="text" id="title" name="title" value="Enter title" size="50" /></br>
                             </br>
                         </td>
                     </tr>
                     <tr>
                         <td align="right">
-                            Question 1: <input type="text" name="q1" value="Enter question" size="100" /></br>
-                            Answer 1: <input type="text" name="a1" value="Enter answer" size="100" /></br>
+                            Question 1: <input type="text" id="q1" name="q1" value="Enter question" size="100" /></br>
+                            Answer 1: <input type="text" id="a1" name="a1" value="Enter answer" size="100" /></br>
                             </br>
-                            Question 2: <input type="text" name="q2" value="Enter question" size="100" /></br>
-                            Answer 2: <input type="text" name="a2" value="Enter answer" size="100" /></br>
+                            Question 2: <input type="text" id="q2" name="q2" value="Enter question" size="100" /></br>
+                            Answer 2: <input type="text" id="a2" name="a2" value="Enter answer" size="100" /></br>
                             </br>
-                            Question 3: <input type="text" name="q3" value="Enter question" size="100" /></br>
-                            Answer 3: <input type="text" name="a3" value="Enter answer" size="100" /></br>
+                            Question 3: <input type="text" id="q3" name="q3" value="Enter question" size="100" /></br>
+                            Answer 3: <input type="text" id="a3" name="a3" value="Enter answer" size="100" /></br>
                             </br>
-                            Question 4: <input type="text" name="q4" value="Enter question" size="100" /></br>
-                            Answer 4: <input type="text" name="a4" value="Enter answer" size="100" /></br>
+                            Question 4: <input type="text" id="q4" name="q4" value="Enter question" size="100" /></br>
+                            Answer 4: <input type="text" id="a4" name="a4" value="Enter answer" size="100" /></br>
                             </br>
-                            Question 5: <input type="text" name="q5" value="Enter question" size="100" /></br>
-                            Answer 5: <input type="text" name="a5" value="Enter answer" size="100" /></br>
+                            Question 5: <input type="text" id="q5" name="q5" value="Enter question" size="100" /></br>
+                            Answer 5: <input type="text" id="a5" name="a5" value="Enter answer" size="100" /></br>
                         </td>
                     </tr>
                     <tr>
