@@ -222,8 +222,14 @@ class TestRandomGame(TestBlackboxGame):
                     message = game_message_box['message']
                     logger.info('Message box: {0}'.format(message))
 
-                    startRound2_button = self.driver.find_element_by_xpath('//*[@id="startRound2"]')
-                    ok_button = self.driver.find_element_by_xpath('//*[@id="ok"]')
+                    startRound2_button = None
+                    ok_button = None
+                    while (not startRound2_button) or (not ok_button):
+                        try:
+                            startRound2_button = self.driver.find_element_by_xpath('//*[@id="startRound2"]')
+                            ok_button = self.driver.find_element_by_xpath('//*[@id="ok"]')
+                        except:
+                            print('An attempt was made to access a socket in a way forbidden by its access permissions')
 
                     if ok_button.is_enabled() and ok_button.is_displayed():
                         ok_button.click()
@@ -246,13 +252,10 @@ class TestRandomGame(TestBlackboxGame):
                         logger.info('{0} picked a category'.format(current_player_name))
 
                     if ('Opponent\'s Choice' == spin_result):
-                        players_cycle = itertools.cycle(range(0,self.max_players))
-                        for x in range(0,current_player_index):
-                            opponet_index = next(players_cycle)
                         #make sure message is has opponents name and current player name
                         #eg. Opponents's Choice! <opponentName>, please select a category for <currentPlayerName>!
-                        opponet_name = player_infos[opponet_index]['playerName']
-                        self.assertTrue(player_infos[opponet_index]['playerName'] in message)
+                        opponet_name = player_infos[(current_player_index + 1) % len(player_infos)]['playerName']
+                        self.assertTrue(opponet_name in message)
                         self.assertTrue(current_player_name in message)
                         logger.info('{0} selecting a category for {1}'.format(opponet_name,current_player_name))
 
