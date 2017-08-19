@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Wheel</title>
+        <meta charset="utf-8">
+        <script src="wheel.js"></script>
+        <script src="gameController.js"></script>
+        <script src="player.js"></script>
+        <script src="category.js"></script>
+        <script src="question.js"></script>
+        <script src="board.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style >
+        </style>
+        <script>
+            // kick things off
+            window.onload = initialize;
+            var gameController;
+            
+            function initialize()
+            {
+                createGameControllerR1();
+            }
+            
+            function createGameControllerR1()
+            {   
+                // list of players
+//                var player0 = new Player("Amy");
+//                var player1 = new Player("Bob");
+//                var player2 = new Player("Charlie");
+                var player0 = new Player(localStorage.getItem("p1"));
+                var player1 = new Player(localStorage.getItem("p2"));
+                var player2 = new Player(localStorage.getItem("p3"));
+                var playerList = [player0, player1, player2];
+                
+                var cats = JSON.parse(localStorage.getItem('board1'));
+                
+                var category0 = new Category(cats[0].questionsList, cats[0].title);
+                var category1 = new Category(cats[1].questionsList, cats[1].title);
+                var category2 = new Category(cats[2].questionsList, cats[2].title);
+                var category3 = new Category(cats[3].questionsList, cats[3].title);
+                var category4 = new Category(cats[4].questionsList, cats[4].title);
+                var category5 = new Category(cats[5].questionsList, cats[5].title);
+                
+                // default categories: values are set in gameController.js
+                var category6 = new Category("", "");
+                var category7 = new Category("", "");
+                var category8 = new Category("", "");
+                var category9 = new Category("", "");
+                var category10 = new Category("", "");
+                var category11 = new Category("", "");
+                
+                // Round 1
+                // questions List category0
+//                var c0q0 = new Question('Named after a New York borough, this drink is traditionally made with rye whiskey, bitters, and sweet vermouth.', 'manhattan', 200);
+//                var c0q1 = new Question('Containing roughly 49 million bubbles, the pressure in a bottle of this beverage is approximately 90 pounds per square inch.', 'champagne', 400);
+//                var c0q2 = new Question('A mixture of gin, vodka, rum, tequila, sweet and sour, and Coke, this drink does not actually contain the beverage listed in its name.', 'long island iced tea', 600);
+//                var c0q3 = new Question('St James Gate Brewery, home to this beer, was originally leased to its creator for 45 Irish Pounds per year for 9,000 years.', 'guinness', 800);
+//                var c0q4 = new Question('Gin derives its distinguishing flavor from this type of berry.', 'juniper', 1000);
+//                var category0QuestionsList = [c0q0, c0q1, c0q2, c0q3, c0q4];
+//                
+//                // questions List category1 
+//                var c1q0 = new Question('This gas is used extensively in exterior lighting, and not just in Las Vegas.', 'neon', 200);
+//                var c1q1 = new Question('Abbreviated K, this element can be found in bananas and helps reduce the occurrence of muscle cramps.', 'potassium', 400);
+//                var c1q2 = new Question('Upon discovery of the Comstock Load in 1859, people flocked to Nevada to mine for this metal, abbreviated Ag.', 'silver', 600);
+//                var c1q3 = new Question('The 235 isotope of this element is used to generate energy for nuclear power plants.', 'uranium', 800);
+//                var c1q4 = new Question('This metal is liquid at room temperature.', 'mercury', 1000);
+//                var category1QuestionsList = [c1q0, c1q1, c1q2, c1q3, c1q4];
+//                
+//                // questions List category2
+//                var c2q0 = new Question('Breaking the “Curse of the Billy Goat,” this national league baseball team won the World Series in 2016.', 'cubs', 200);
+//                var c2q1 = new Question('This NFL team plans to relocate to Las Vegas, Nevada in 2019.', 'raiders', 400);
+//                var c2q2 = new Question('Widely considered the greatest hockey player of all time, Wayne Gretsky began his career in Edmonton, playing for this team.', 'oilers', 600);
+//                var c2q3 = new Question('Boasting players such as Tim Duncan and Manu Ginobili, this NBA franchise has the highest all time winning percentage in the NBA.', 'spurs', 800);
+//                var c2q4 = new Question('Led by Christano Ronaldo, this Spanish football team won the UEFA Champions League tournament in 2017.', 'real madrid', 1000);
+//                var category2QuestionsList = [c2q0, c2q1, c2q2, c2q3, c2q4];
+//                
+//                // questions List category3
+//                var c3q0 = new Question('The longest running animated series in US history is this show, having aired over 500 episodes.', 'simpsons', 200);
+//                var c3q1 = new Question('This HBO show is an adaptation of George R.R. Martin’s novel series titled “A Song of Ice and Fire.”', 'game of thrones', 400);
+//                var c3q2 = new Question('This talk show host headlined a late night show on CNN from 1985-2010, winning two Peabody Awards and 10 Cable ACE Awards.', 'larry king', 600);
+//                var c3q3 = new Question('Starring Lucille Ball and Desi Arnaz, this tv show was voted the “Best TV Show of all Time” in a poll done by ABC News.', 'i love lucy', 800);
+//                var c3q4 = new Question('The first interracial kiss on American Network Television was aired on this sci-fi series in 1968.', 'star trek', 1000);
+//                var category3QuestionsList = [c3q0, c3q1, c3q2, c3q3, c3q4];
+//
+//                // questions List category4
+//                var c4q0 = new Question('This quote was said by a famous inventor, “If I had asked people what they wanted, they would have said faster horses.”', 'Henry Ford', 200);
+//                var c4q1 = new Question('This quote was said by a famous inventor, "The present is theirs; the future, for which I really worked, is mine."', 'Nikola Tesla', 400);
+//                var c4q2 = new Question('This quote was said by a famous inventor, "I have not failed. I’ve just found 10,000 ways that won’t work."', 'Thomas Edison', 600);
+//                var c4q3 = new Question('This quote was said by a famous inventor, "Creativity is intelligence having fun."', 'Abert Einstein', 800);
+//                var c4q4 = new Question('This quote was said by a famous inventor, "Stay hungry, stay foolish."', 'Steve Jobs', 1000);
+//                var category4QuestionsList = [c4q0, c4q1, c4q2, c4q3, c4q4];
+//                
+//                // questions List category5
+//                var c5q0 = new Question('This company slogan is, "Just do it"', 'Nike', 200);
+//                var c5q1 = new Question('This company slogan is, "Think Different"', 'Apple', 400);
+//                var c5q2 = new Question('This company slogan is, "There are some things money can’t buy. For everything else, there’s MasterCard.', 'MasterCard', 600);
+//                var c5q3 = new Question('This company slogan is, "The Ultimate Driving Machine"', 'BMW', 800);
+//                var c5q4 = new Question('This company slogan is, "Betcha Can’t Eat Just One"', 'Lay’s', 1000);
+//                var category5QuestionsList = [c5q0, c5q1, c5q2, c5q3, c5q4];
+//                
+//                
+//                // dynamic categories
+//                var category0 = new Category(category0QuestionsList, "Potent Potables");
+//                var category1 = new Category(category1QuestionsList, "Periodic Table");
+//                var category2 = new Category(category2QuestionsList, "Sports Teams");
+//                var category3 = new Category(category3QuestionsList, "TV Trivia");
+//                var category4 = new Category(category4QuestionsList, "Famous Inventor Quotes");
+//                var category5 = new Category(category5QuestionsList, "Company Slogan");
+                
+                var categoryList = [category0, category1, category2, category3, category4, category5,
+                                    category6, category7, category8, category9, category10, category11];
+                
+                var wheel = 
+                        new Wheel("wheel",
+                        {
+                            includeLabels: true,
+                            data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+                            colors: [
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"]
+                            ]
+                        });
+                
+                var board = new Board();
+                
+                var roundNumber = 1
+                gameController = new GameController(wheel, board, playerList, categoryList, roundNumber);
+                gameController.startGame();
+            }
+            
+            function createGameControllerR2()
+            {   
+                console.log("--> createGameControllerR2 running");
+                
+                // list of players
+                var playerList = gameController.playerList; // retain players from round 1
+                gameController.resetPlayerTokens();
+                
+                var cats = JSON.parse(localStorage.getItem('board1'));
+                
+                var category0 = new Category(cats[6].questionsList, cats[6].title);
+                var category1 = new Category(cats[7].questionsList, cats[7].title);
+                var category2 = new Category(cats[8].questionsList, cats[8].title);
+                var category3 = new Category(cats[9].questionsList, cats[9].title);
+                var category4 = new Category(cats[10].questionsList, cats[10].title);
+                var category5 = new Category(cats[11].questionsList, cats[11].title);
+                
+                // default categories: values are set in gameController.js
+                var category6 = new Category("", "");
+                var category7 = new Category("", "");
+                var category8 = new Category("", "");
+                var category9 = new Category("", "");
+                var category10 = new Category("", "");
+                var category11 = new Category("", "");
+                
+                // Round 2
+                // questions List category0
+//                var c0q0 = new Question('This is the smallest planet in our solar system.', 'Mercury', 400);
+//                var c0q1 = new Question('This planet is the farthest from our sun in our solar system.', 'Neptune', 800);
+//                var c0q2 = new Question('This plant is the hottest in our solar system', 'Venus', 1200);
+//                var c0q3 = new Question('This planet is three quarters covered by water.', 'Earth', 1600);
+//                var c0q4 = new Question('This pant is the coolest in our solar system', 'Neptune', 2000);
+//                var category0QuestionsList = [c0q0, c0q1, c0q2, c0q3, c0q4];
+//                
+//                // questions List category1 
+//                var c1q0 = new Question('This man of metal from Marvel is known for his high tech suit', 'Iron man', 400);
+//                var c1q1 = new Question('This dark knight is based in Gotham City', 'Batman', 800);
+//                var c1q2 = new Question('This clown is known for asking "Why so serious?"', 'Joker', 1200);
+//                var c1q3 = new Question('You better not make this green monster angry', 'Hulk', 1600);
+//                var c1q4 = new Question('This Amazonian woman can make you tell the truth with the lasso of truth', 'Wonder Woman', 2000);
+//                var category1QuestionsList = [c1q0, c1q1, c1q2, c1q3, c1q4];
+//                
+//                // questions List category2
+//                var c2q0 = new Question('Jesus was said to turn water into this', 'wine', 400);
+//                var c2q1 = new Question('Mcdonalds sells 75 of these every second', 'hamburger', 800);
+//                var c2q2 = new Question('This cereal is only for kids, no silly rabbits!', 'Trix', 1200);
+//                var c2q3 = new Question('This cooking procedure includes adding alchohol to a hot pan to create flames', 'Flambé', 1600);
+//                var c2q4 = new Question('This meat is the leading source of salmonella poisoning', 'chicken', 2000);
+//                var category2QuestionsList = [c2q0, c2q1, c2q2, c2q3, c2q4];
+//                
+//                // questions List category3
+//                var c3q0 = new Question('This man was the first president of the USA', 'George Washington', 400);
+//                var c3q1 = new Question('This purchase from the French in 1803 doubles the size of the United States', 'Louisiana Purchase', 800);
+//                var c3q2 = new Question('The pilgrims landed on this rock when they first came to America', 'Plymouth', 1200);
+//                var c3q3 = new Question('This war was known as "The Great War"', 'World War I', 1600);
+//                var c3q4 = new Question('This man made a famous speech titled "I have a dream"', 'Martin Luther King Jr.', 2000);
+//                var category3QuestionsList = [c3q0, c3q1, c3q2, c3q3, c3q4];
+//
+//                // questions List category4
+//                var c4q0 = new Question('This is the highest mountain on earth', 'Mount Everest', 400);
+//                var c4q1 = new Question('The Grand Canyon in Arizona is part of this river basin', 'Colorado', 800);
+//                var c4q2 = new Question('This is the world’s largest coral reef system', 'Great Barrier Reef ', 1200);
+//                var c4q3 = new Question('This waterfall on the Zambia/Zimbabwe border is roughly twice the height of the Niagara Falls', 'Victoria Falls', 1600);
+//                var c4q4 = new Question('This natural wonder is also referred to as Polar Lights or Northern Lights', 'Aurora Borealis', 2000);
+//                var category4QuestionsList = [c4q0, c4q1, c4q2, c4q3, c4q4];
+//                
+//                // questions List category5
+//                var c5q0 = new Question('This bird can run faster than a horse', 'Ostrich', 400);
+//                var c5q1 = new Question('This is the only mammal that can fly', 'Bat', 800);
+//                var c5q2 = new Question('This is the most venomous fish in the world', 'Stonefish', 1200);
+//                var c5q3 = new Question('This is the only bird that can fly backwards', 'Hummingbird', 1600);
+//                var c5q4 = new Question('A group of parrots is known as this', 'Pandemonium', 2000);
+//                var category5QuestionsList = [c5q0, c5q1, c5q2, c5q3, c5q4];
+//                
+//                
+//                // dynamic categories
+//                var category0 = new Category(category0QuestionsList, "Solar System");
+//                var category1 = new Category(category1QuestionsList, "Super Heroes");
+//                var category2 = new Category(category2QuestionsList, "Food and Drink");
+//                var category3 = new Category(category3QuestionsList, "History");
+//                var category4 = new Category(category4QuestionsList, "Natural Wonders");
+//                var category5 = new Category(category5QuestionsList, "Animals Facts");
+                
+                var categoryList = [category0, category1, category2, category3, category4, category5,
+                                    category6, category7, category8, category9, category10, category11];
+                
+                var wheel = 
+                        new Wheel("wheel",
+                        {
+                            includeLabels: true,
+                            data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+                            colors: [
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"],
+                                ["#FFDAB9", "#FF0000"],
+                                ["#E6E6FA", "#FF0000"],
+                                ["#E0FFFF", "#FF0000"]
+                            ]
+                        });
+                
+                var board = new Board();
+                
+                var roundNumber = 2;
+                
+                gameController = new GameController(wheel, board, playerList, categoryList, roundNumber);
+                gameController.enableSpinButton(0); // enable only the first spin button at the start of round 2;
+                gameController.startGame();
+            }
+            
+            
+            function createWheel() {
+                //
+                // create a Wheel.
+                // 
+                wheel = new Wheel("wheel",
+                        {
+                            includeLabels: true,
+                            data: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+                            // labels: ["Category 1", "Bankrupt", "Category 2", "Lose Turn",
+                            //     "Category 3", "Free Turn", "Category 4", "Spin Again",
+                            //     "Category 5", "Player's Choice", "Category 6", "Opponents' Choice"],
+                            colors: [
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"],
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"],
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"],
+                                ["#FFDAB9", "#C0392B"],
+                                ["#E6E6FA", "#C0392B"],
+                                ["#E0FFFF", "#C0392B"]
+                            ]
+                        });
+            }
+        </script>
+    </head>
+    <body>
+
+        <table width="100%">
+            <tr >
+                <td colspan="3" align="center" >
+                    <img alt src="img/logo.jpg" style="height:150px"/>
+                    <br/><br/>
+                </td>
+            </tr>
+            <tr>
+                <td width="500px" height="500px">
+                    <canvas id="wheel" width="500" height="500">
+                    </canvas>
+                </td>
+                <td style="width: 30px;">
+                    <br/>
+                    <img alt src="img/pointer.png" style="width: 26px;height: 13px"/>
+                </td> 
+                <td align="center">
+                    <table class="jeopardyBoard" >
+                        <tr>
+                            <td height="80" class="jeopardyBoard" width="135">
+                                <button disabled class="categoryButton" id="categoryButton0" onclick="gameController.selectCategory(0);" >Category 0</button>
+                            </td>
+                            
+                            <td height="80" class="jeopardyBoard"  width="135">
+                                <button disabled class="categoryButton" id="categoryButton1" onclick="gameController.selectCategory(1);">Category 1</button>
+                            </td>
+                            
+                            <td height="80" class="jeopardyBoard"  width="135">
+                                <button disabled class="categoryButton" id="categoryButton2" onclick="gameController.selectCategory(2);">Category 2</button>
+                            </td>
+                            
+                            <td height="80" class="jeopardyBoard"  width="135">
+                                <button disabled class="categoryButton" id="categoryButton3" onclick="gameController.selectCategory(3);">Category 3</button>
+                            </td>
+                            
+                            <td height="80" class="jeopardyBoard"  width="135">
+                                <button disabled class="categoryButton" id="categoryButton4" onclick="gameController.selectCategory(4);">Category 4</button>
+                            </td>
+                            
+                            <td height="80" class="jeopardyBoard"  width="135">
+                                <button disabled class="categoryButton" id="categoryButton5" onclick="gameController.selectCategory(5);">Category 5</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="80" class="jeopardyBoard">
+                                <span id="valueC0Q0">valueC0Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q0">valueC1Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q0">valueC2Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q0">valueC3Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q0">valueC4Q0</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q0">valueC5Q0</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="80" class="jeopardyBoard">
+                                <span id="valueC0Q1">valueC0Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q1">valueC1Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q1">valueC2Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q1">valueC3Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q1">valueC4Q1</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q1">valueC5Q1</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="80" class="jeopardyBoard">
+                                <span id="valueC0Q2">valueC0Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q2">valueC1Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q2">valueC2Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q2">valueC3Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q2">valueC4Q2</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q2">valueC5Q2</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="80" class="jeopardyBoard">
+                                <span id="valueC0Q3">valueC0Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q3">valueC1Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q3">valueC2Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q3">valueC3Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q3">valueC4Q3</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q3">valueC5Q3</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="80" class="jeopardyBoard">
+                                <span id="valueC0Q4">valueC0Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC1Q4">valueC1Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC2Q4">valueC2Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC3Q4">valueC3Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC4Q4">valueC4Q4</span>
+                            </td>
+                            
+                            <td class="jeopardyBoard" >
+                                <span id="valueC5Q4">valueC5Q4</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td> 
+            </tr>
+            <tr>
+                <td colspan="3" style="word-wrap: break-word" >
+                    Player <span id="currentPlayerName"></span>'s turn <br/>
+                    Spins Left: <span id="spinsLeft"></span><br/>
+                    Round: <span id="roundNumber"></span><br/>
+                    <br/>
+                </td>
+            <tr>
+                <td width="400" align="left" valign="top">
+                    Selected Category: <span style="width:800px;word-wrap: break-word;" id="selectedCategory"></span>
+                    <br/>
+                    Selected Question: <span style="width:800px;word-wrap: break-word;" id="selectedQuestion"></span>
+                    <br/>
+                    Answer: <span style="width:800px;word-wrap: break-word;" id="answer"></span>
+                    <br/>
+                </td>
+                <td colspan="2" align="center">
+                    <font size="10">Timer: </font>
+                    <font size="10" id="timer">0</font><br/>
+                    <button disabled class="w3-btn w3-white w3-border w3-border-green w3-round-xxlarge" id="correctButton" onclick="gameController.selectCorrect()" style="width:200px">Correct</button>
+                    <button disabled class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge" id="incorrectButton" onclick="gameController.selectIncorrect()" style="width:200px">Incorrect</button>
+                    <button disabled class="w3-btn w3-white w3-border w3-border-blue w3-round-xxlarge" id="timeExpiredButton" onclick="gameController.selectTimeExpired()" style="width:200px">Time Expired</button>
+                    <br/>
+                    <br/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table width="100%"  border="1">
+                        <tr>
+                            <td >
+                                <span id="player0Name">Player 0</span><br/>
+                                Score: <span id="player0Score">0</span><br/>
+                                Free spin tokens: <span id="player0Tokens">0</span><br/>
+                                <button id="player0Spin" style="width:100px" onclick="gameController.spinWheel();" 
+                                        class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge">
+                                    Spin
+                                </button>
+                            </td>
+                            <td >
+                                <span id="player1Name">Player 1</span><br/>
+                                Score: <span id="player1Score">0</span><br/>
+                                Free spin tokens: <span id="player1Tokens">0</span><br/>
+                                <button id="player1Spin" style="width:100px" onclick="gameController.spinWheel();" 
+                                        disabled class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge">
+                                    Spin
+                                </button>
+                            </td> 
+                            <td >
+                                <span id="player2Name">Player 2</span><br/>
+                                Score: <span id="player2Score">0</span><br/>
+                                Free Spin Tokens: <span id="player2Tokens">0</span><br/>
+                                <button id="player2Spin" style="width:100px" onclick="gameController.spinWheel();" 
+                                        disabled class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge">
+                                    Spin
+                                </button>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- Use Token Modal -->
+        <div class="modal fade" id="useTokenModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        Player <span id="popupHeader" class="modal-title">Modal Header</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>You have <span id="popupTokens"></span> lost your turn. Would you like to use one of your Free Spin Tokens?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.useTokenFlow();" >Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.loseTurnFlow();" >No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Message Modal for round/game end and special categories -->
+        <div class="modal fade" id="messageModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        Game Message
+                    </div>
+                    <div class="modal-body">
+                        <span id="gameMessage"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button style="display: none" id="startRound2" type="button" class="btn btn-default" data-dismiss="modal" onclick="createGameControllerR2()">Start Round 2!</button>
+                        <button id="ok" type="button" class="btn btn-default" data-dismiss="modal" onclick="">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>
