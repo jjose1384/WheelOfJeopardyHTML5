@@ -172,15 +172,18 @@ class GameUtil(object):
     def read_state_indicators(self):
         state_indicators = {}
 
-        #get each element by id
-        current_player = self.driver.find_element_by_xpath('//*[@id="currentPlayerName"]')
-        spins_left = self.driver.find_element_by_xpath('//*[@id="spinsLeft"]')
-        round_number = self.driver.find_element_by_xpath('//*[@id="roundNumber"]')
+        while( any([key not in state_indicators.keys() for key in ['currentPlayer','spinsLeft','roundNumber']]) ):
+            try:
+                #get each element by id
+                current_player = self.driver.find_element_by_xpath('//*[@id="currentPlayerName"]')
+                spins_left = self.driver.find_element_by_xpath('//*[@id="spinsLeft"]')
+                round_number = self.driver.find_element_by_xpath('//*[@id="roundNumber"]')
 
-        state_indicators['currentPlayer'] = current_player.text
-        state_indicators['spinsLeft'] = int(spins_left.text)
-        state_indicators['roundNumber'] = int(round_number.text)
-
+                state_indicators['currentPlayer'] = current_player.text
+                state_indicators['spinsLeft'] = int(spins_left.text)
+                state_indicators['roundNumber'] = int(round_number.text)
+            except:
+                print('Could\'t find all the state indecaitors')
         return state_indicators
 
     '''
@@ -188,15 +191,19 @@ class GameUtil(object):
     '''
     def read_question_info(self):
         question_info = {}
-        selected_category = self.driver.find_element_by_xpath('//*[@id="selectedCategory"]')
-        selected_question = self.driver.find_element_by_xpath('//*[@id="selectedQuestion"]')
-        answer = self.driver.find_element_by_xpath('//*[@id="answer"]')
+        while (any([key not in question_info.keys() for key in ['selectedCategory', 'selectedQuestion', 'answer']])):
+            try:
+                selected_category = self.driver.find_element_by_xpath('//*[@id="selectedCategory"]')
+                selected_question = self.driver.find_element_by_xpath('//*[@id="selectedQuestion"]')
+                answer = self.driver.find_element_by_xpath('//*[@id="answer"]')
 
-        question_info['selectedCategory'] = selected_category.text
-        question_info['selectedQuestion'] = selected_question.text
-        question_info['answer'] = answer.text
+                question_info['selectedCategory'] = selected_category.text
+                question_info['selectedQuestion'] = selected_question.text
+                question_info['answer'] = answer.text
 
-        self.question_info = question_info
+                self.question_info = question_info
+            except:
+                print('Could\'t find all the question_info')
         return  question_info
 
     '''
@@ -222,21 +229,25 @@ class GameUtil(object):
     '''
     def read_player_turn(self):
         enabled_player = None
-        for i in range(0, self.max_player):
-            # get each element by id
-            xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
-            playerSpin = self.driver.find_element_by_xpath(xpath)
-            #set enabled_player to i if their spin is enabled
-            if playerSpin.is_enabled():
-                if enabled_player:
-                    #found multiple player with spin enabled
-                    raise ValueError
-                else:
-                    enabled_player = i
+        while (enabled_player == None):
+            try:
+                for i in range(0, self.max_player):
+                    # get each element by id
+                    xpath = '// *[ @ id = "player{0}Spin"]'.format(i)
+                    playerSpin = self.driver.find_element_by_xpath(xpath)
+                    #set enabled_player to i if their spin is enabled
+                    if playerSpin.is_enabled():
+                        if enabled_player:
+                            #found multiple player with spin enabled
+                            raise ValueError
+                        else:
+                            enabled_player = i
+            except:
+                print('Couldn\'t find a player with spinner enabled')
 
-        #check if we found at least one. If not found, raise exception
-        if enabled_player == None:
-            raise ValueError
+        # #check if we found at least one. If not found, raise exception
+        # if enabled_player == None:
+        #     raise ValueError
 
         #double checking with state indecators "Players {playerName}'s turn"
         state_indecators = self.read_state_indicators()
