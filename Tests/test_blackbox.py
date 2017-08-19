@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait  # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC  # available since 2.26.0
 import random
 import time
+import itertools
+
 #wrapper help functions to control the browser
 import PlayGameUtil
 import logging
@@ -56,8 +58,8 @@ class TestBlackboxGame(unittest.TestCase):
     #ran once after testing is done
     @classmethod
     def tearDownClass(cls):
-        pass
         cls.driver.quit()
+        pass
 
     #setUp, ran once before each test
     def setUp(self):
@@ -189,13 +191,18 @@ class TestRandomGame(TestBlackboxGame):
         logger.info('Setting test_spins_left to 50')
         test_spins_left = 50
 
-        players_info = self.play_game_util.read_player_info()
+        #get player info at the start
+        player_infos = self.play_game_util.read_player_info()
+
+        #create a list of player tokens and scores
+        player_scores = [0]*self.max_players
+        player_tokens = [0]*self.max_players
 
         while True:
             #get current player index
-            current_player = self.play_game_util.read_player_turn()
+            current_player_index = self.play_game_util.read_player_turn()
             #read the player name
-            current_player_name = players_info[current_player]['playerName']
+            current_player_name = player_infos[current_player_index]['playerName']
 
             #spin the current player, wait 10 seconds for it to land
             self.play_game_util.do_spin_wheel()
@@ -208,6 +215,7 @@ class TestRandomGame(TestBlackboxGame):
 
             #check if the spin resulted in a message box
             if self.play_game_util.is_game_message_present():
+
                 #try read message box, if enabled or not
                 game_message_box = self.play_game_util.read_game_message()
                 if game_message_box:
@@ -224,59 +232,97 @@ class TestRandomGame(TestBlackboxGame):
                         startRound2_button.click()
 
                     #check if the message is about player or opponents choice
-                    if ('\'s Choice' in message):
+                    if ('Player\'s Choice' in spin_result):
+                        #check if the message contains the person name
+                        self.assertTrue(current_player_name in message)
+
                         #make sure jeopardy_board is clickable
                         self.assertTrue(self.play_game_util.is_jeopardy_board_clickable())
-                        self.play_game_util.do_select_random_categoy()
 
-                        question_info = self.play_game_util.read_question_info()
-                        question = question_info['selectedQuestion']
-                        category = question_info['selectedCategory']
-                        logger.info(': {0}'.format(message))
+                        try:
+                            self.play_game_util.do_select_random_categoy()
+                        except :
+                            logger.info('Failed to select category')
+                        logger.info('{0} picked a category'.format(current_player_name))
+
+                    if ('Opponent\'s Choice' == spin_result):
+                        players_cycle = itertools.cycle(range(0,self.max_players))
+                        for x in range(0,current_player_index):
+                            opponet_index = next(players_cycle)
+                        #make sure message is has opponents name and current player name
+                        #eg. Opponents's Choice! <opponentName>, please select a category for <currentPlayerName>!
+                        opponet_name = player_infos[opponet_index]['playerName']
+                        self.assertTrue(player_infos[opponet_index]['playerName'] in message)
+                        self.assertTrue(current_player_name in message)
+                        logger.info('{0} selecting a category for {1}'.format(opponet_name,current_player_name))
+
+                        # make sure jeopardy_board is clickable
+                        self.assertTrue(self.play_game_util.is_jeopardy_board_clickable())
+                        try:
+                            self.play_game_util.do_select_random_categoy()
+                        except :
+                            logger.info('Failed to select category')
+                        logger.info('{0} picked a category'.format(opponet_name))
+
+                    if ('Bankrupt' in message):
+                        #only reset player score if they are above zero
+                        if player_scores[current_player_index] > 0:
+                            player_scores[current_player_index] = 0
+                            logger.info('{0} score was set to 0'.format(current_player_name))
+                        time.sleep(10)
+
+                    if ('won a free spin token' in message):
+                        player_tokens[current_player_index] = player_tokens[current_player_index] + 1
+                        logger.info('{0} has {1} tokens'.format(current_player_name, player_tokens[current_player_index]))
 
             #Check for answer prompt
             if self.play_game_util.is_select_answer_present():
-
                 question_info = self.play_game_util.read_question_info()
                 question = question_info['selectedQuestion']
                 category = question_info['selectedCategory']
                 #log the information
-                logger.info(u'Question: {0}'.format(question))
                 logger.info(u'Category: {0}'.format(category))
+                logger.info(u'Question: {0}'.format(question))
 
                 #randomly pick if correct or incorrect
                 random_answer = [True,False]
                 answer = random.choice(random_answer)
                 if answer:
-                    logger.info('Player answered correct!')
+                    logger.info('{0} answered correct!'.format(current_player_name))
                     self.play_game_util.do_answer_correct()
+
                 else:
-                    logger.info('Player answered incorrect!')
+                    logger.info('{0} answered incorrect!'.format(current_player_name))
                     self.play_game_util.do_answer_incorrect()
-            time.sleep(1)
+
+
             #Check token use prompt
             if self.play_game_util.is_use_token_popup_present():
+                #make sure player has at least one token to use to even get this popup
+                self.assertTrue(player_tokens[current_player_index] > 0)
                 use_token_random = [True, False]
                 use_token = random.choice(use_token_random)
                 if use_token:
                     self.play_game_util.do_use_token_yes()
                     logger.info('{0} : {1}'.format(current_player_name, message))
                     logger.info('{0} : selected to use free spin token'.format(current_player_name))
+                    player_tokens[current_player_index] = player_tokens[current_player_index] - 1
+                    logger.info('{0} has {1} tokens'.format(current_player_name, player_tokens[current_player_index]))
                 else:
                     self.play_game_util.do_use_token_no()
                     logger.info('{0} : {1}'.format(current_player_name, message))
                     logger.info('{0} : selected not to use free spin token'.format(current_player_name))
+                    logger.info('{0} has {1} tokens'.format(current_player_name, player_tokens[current_player_index]))
 
-            #each spin should decreemnt spins left
-            test_spins_left = test_spins_left-1
-
-            #read game and get spins left
+            # each spin should decreemnt spins left
+            test_spins_left = test_spins_left - 1
+            logger.info('{0} spins left'.format(test_spins_left))
+            # read game and get spins left
             state_indecators = self.play_game_util.read_state_indicators()
             actual_spins = state_indecators['spinsLeft']
 
-            #test actual and test spins left
-            self.assertEqual(actual_spins,test_spins_left)
-
+            # test actual and test spins left
+            self.assertEqual(actual_spins, test_spins_left)
 
 def testsuite_TestRandomGame():
     suite = unittest.TestSuite()

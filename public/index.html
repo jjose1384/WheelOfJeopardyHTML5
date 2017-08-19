@@ -516,11 +516,11 @@
                         Player <span id="popupHeader" class="modal-title">Modal Header</span>
                     </div>
                     <div class="modal-body">
-                        <p>You have <span id="popupTokens"></span> lost your turn. Would you like to use one of your Free Spin Tokens?</p>
+                        <span id="popupTokens">You have lost your turn. Would you like to use one of your Free Spin Tokens?</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.useTokenFlow();" >Yes</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.loseTurnFlow();" >No</button>
+                        <button type="button" id="useTokenYes" class="btn btn-default" data-dismiss="modal" onclick="gameController.useTokenFlow();" >Yes</button>
+                        <button type="button" id="useTokenNo" class="btn btn-default" data-dismiss="modal" onclick="gameController.loseTurnFlow();" >No</button>
                     </div>
                 </div>
             </div>

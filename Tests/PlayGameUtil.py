@@ -73,12 +73,13 @@ class GameUtil(object):
             player_number = self.read_player_turn()
             self.driver.find_element_by_xpath('// *[ @ id = "player{0}Spin"]'.format(player_number)).click()
             #wait for wheel to stop spinning. timeout + 1
-            WebDriverWait(self.driver, 11).until(
-                lambda driver: driver.find_element(By.ID, "incorrectButton").is_enabled()
-                               or driver.find_element(By.ID, "correctButton").is_enabled()
-                               or driver.find_element(By.ID, "messageModal").is_displayed()
-                               or driver.find_element(By.ID, "gameMessage").is_displayed()
-                               or driver.find_element(By.ID, "useTokenModal").is_displayed())
+            # WebDriverWait(self.driver, 11).until(
+            #     lambda driver: driver.find_element(By.ID, "incorrectButton").is_enabled()
+            #                    or driver.find_element(By.ID, "correctButton").is_enabled()
+            #                    or driver.find_element(By.ID, "messageModal").is_displayed()
+            #                    or driver.find_element(By.ID, "gameMessage").is_displayed()
+            #                    or driver.find_element(By.ID, "useTokenModal").is_displayed())
+            time.sleep(11)
         return True
 
     '''
@@ -243,6 +244,7 @@ class GameUtil(object):
         #subtracting 'Player ' from the string
         current_player.replace('Player ','')
         current_player.replace('\'s turn','')
+
         player_infos = self.read_player_info()
         for player in player_infos:
             if player['playerName'] == current_player:
@@ -256,20 +258,25 @@ class GameUtil(object):
     '''
     def read_player_info(self):
         player_infos = []
-        for i in range(0, self.max_player):
-            xpath_name = '// *[ @ id = "player{0}Name"]'.format(i)
-            xpath_score = '// *[ @ id = "player{0}Score"]'.format(i)
-            xpath_tokens = '// *[ @ id = "player{0}Tokens"]'.format(i)
-            player_info = {}
-            # get the values
-            player_name = self.driver.find_element_by_xpath(xpath_name)
-            player_score = self.driver.find_element_by_xpath(xpath_score)
-            player_tokens = self.driver.find_element_by_xpath(xpath_tokens)
-            player_info['playerName'] = player_name.text
-            player_info['playerScore'] = int(player_score.text)
-            player_info['playerToken'] = int(player_tokens.text)
-            player_infos.append(player_info)
-
+        #keep trying to get all max_player info
+        while (not player_infos) and (len(player_infos) < self.max_player):
+            try:
+                for i in range(0, self.max_player):
+                    xpath_name = '// *[ @ id = "player{0}Name"]'.format(i)
+                    xpath_score = '// *[ @ id = "player{0}Score"]'.format(i)
+                    xpath_tokens = '// *[ @ id = "player{0}Tokens"]'.format(i)
+                    player_info = {}
+                    # get the values
+                    player_name = self.driver.find_element_by_xpath(xpath_name)
+                    player_score = self.driver.find_element_by_xpath(xpath_score)
+                    player_tokens = self.driver.find_element_by_xpath(xpath_tokens)
+                    player_info['playerName'] = player_name.text
+                    player_info['playerScore'] = int(player_score.text)
+                    player_info['playerToken'] = int(player_tokens.text)
+                    player_infos.append(player_info)
+            except:
+                player_infos = []
+                print('Failed to get all {0} players info'.format(self.max_player))
         return player_infos
 
     '''
