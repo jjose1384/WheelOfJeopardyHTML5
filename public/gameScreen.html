@@ -28,10 +28,6 @@
             
             function createGameControllerR1()
             {   
-                // list of players
-//                var player0 = new Player("Amy");
-//                var player1 = new Player("Bob");
-//                var player2 = new Player("Charlie");
                 var player0 = new Player(localStorage.getItem("p1"));
                 var player1 = new Player(localStorage.getItem("p2"));
                 var player2 = new Player(localStorage.getItem("p3"));
@@ -538,13 +534,13 @@
                         <p>You have <span id="popupTokens"></span> lost your turn. Would you like to use one of your Free Spin Tokens?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.useTokenFlow();" >Yes</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="gameController.loseTurnFlow();" >No</button>
+                        <button type="button" id="tokenYes" class="btn btn-default" data-dismiss="modal" onclick="gameController.useTokenFlow();" >Yes</button>
+                        <button type="button" id="tokenNo" class="btn btn-default" data-dismiss="modal" onclick="gameController.loseTurnFlow();" >No</button>
                     </div>
                 </div>
             </div>
         </div>
-        
+                
         <!-- Message Modal for round/game end and special categories -->
         <div class="modal fade" id="messageModal" role="dialog">
             <div class="modal-dialog">
@@ -560,6 +556,28 @@
                     <div class="modal-footer">
                         <button style="display: none" id="startRound2" type="button" class="btn btn-default" data-dismiss="modal" onclick="createGameControllerR2()">Start Round 2!</button>
                         <button id="ok" type="button" class="btn btn-default" data-dismiss="modal" onclick="">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Message Modal for round/game end and special categories -->
+        <div class="modal fade" id="dailyDoubleModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        Game Message
+                    </div>
+                    <div class="modal-body">
+                        <span id="ddMessage"></span>
+                    </div>
+                    <div>
+                        <input type="text" id="waigerAmount" name="waigerAmount" value="0" size="20" onchange="getWaiger()"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="waigerOk" type="button" class="btn btn-default" data-dismiss="modal" onclick="">Ok</button>
                     </div>
                 </div>
             </div>
