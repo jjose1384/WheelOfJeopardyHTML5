@@ -173,7 +173,7 @@ and open the template in the editor.
             <table border="1" cellpadding="3">
                 <thead>
                     <tr>
-                        <td align="center">
+                        <td style="text-align:center">
                             <img src="img/logo.jpg" width="300" height="150" alt="Wheel of Jeopardy"/>
                         </td>
                     </tr>
@@ -186,7 +186,7 @@ and open the template in the editor.
                     </tr>
                     <tr>
                          <td >
-                             Please select 12 categories from the list below </br>
+                             Please select a category from the list below </br>
                              <select id="cats" name="cats" onchange="loadData()"></select>
                         </td>
                     </tr>
@@ -210,7 +210,7 @@ and open the template in the editor.
                     </tr>
                     <tr>
                         <td>
-                             <input type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xxlarge" align="center" value="Update category" name="deleteCategory" onclick="updateCat()" />  <input type="button" align="center" class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge" value="Delete category" name="deleteCategory" onclick="deleteCat()" />
+                             <input type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xxlarge" align="center" value="Update category" id="updateCategory" name="updateCategory" onclick="updateCat()" />  <input type="button" align="center" class="w3-btn w3-white w3-border w3-border-red w3-round-xxlarge" value="Delete category" name="deleteCategory" onclick="deleteCat()" />
                         </td>
                     </tr>
                 </tbody>

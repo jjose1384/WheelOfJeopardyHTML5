@@ -5,9 +5,11 @@
  */
 
 // default game properties
-var gameTimerDefault = 5; // in seconds
+var gameTimerDefault = 10; // in seconds
 var spinsLeftDefault = 50;
 var questionsLeftDefault = 30;
+var dailyDouble;
+var isDD = false;
 
 // fixed categories
 var category_bankrupt = "Bankrupt";
@@ -28,7 +30,8 @@ function GameController(wheelParam, boardParam, playerListParam, categoryListPar
     this.currentPlayerIndex = 0; // index of the player whose turn it is
     this.playerList = playerListParam;
     this.timer; // used to start and stop timer
-
+    
+    
     // set defaultCategories
     categoryListParam[6].title = category_bankrupt;
     categoryListParam[7].title = category_loseTurn;
@@ -51,6 +54,7 @@ GameController.prototype = {
         this.updateSpinsLeft();
         this.updateCurrentPlayer();
         this.updateRoundNumber();
+        this.setDailyDoubles(); 
         this.updateSelectedCategory();
         this.updateSelectedQuestion();
         
@@ -66,7 +70,7 @@ GameController.prototype = {
         this.wheel.draw(0, false);
     },
     
-	startCountdownTimer: function ()
+    startCountdownTimer: function ()
     {
         var self = this;
         self.gameTimer = gameTimerDefault;
@@ -84,6 +88,7 @@ GameController.prototype = {
                 // play timeup sound
                 var audio = new Audio('sound/timeUp.mp3');
                 audio.play();
+                
                 
                 self.enableModeratorButtons(true);
             }
@@ -114,8 +119,60 @@ GameController.prototype = {
     {
         var self = this;
         var outputId = "selectedCategory";
+        var maxBet = 1000;
+        var waiger;
+        var validWaiger = false;
+        self.isDD = false;
+        
         if (self.board.selectedCategory !== null)
         {
+            if(self.board.selectedCategoryIndex !== null)
+            {
+                
+                for(var i = 0; i < dailyDouble.length; i++)
+                { // determine if the question is a daily double
+                    if(self.board.selectedCategoryIndex === dailyDouble[i][0] && self.board.selectedCategory.selectedQuestionIndex === dailyDouble[i][1])
+                    { // It is a daily double
+                        self.isDD = true;
+                    }
+                }
+                
+                if(self.isDD)
+                {
+                    if(this.roundNumber === 2)
+                    {  //  Can bet up to 2000 for second round (or players score, if it is higher.
+                        maxBet = 2000;
+                    }
+                
+                    if(self.getCurrentPlayer().getScore(this.roundNumber) > maxBet)
+                    {
+                        maxBet = self.getCurrentPlayer().getScore(this.roundNumber);
+                    }
+                
+                    do
+                    {
+                        waiger = window.prompt("Daily Double! " + self.getCurrentPlayer().name + ", enter your waiger. You can bet up to " + maxBet);
+                        
+                        //if(parseInt(Number(waiger)) === waiger)
+                        if(!isNaN(waiger) && waiger !== "")
+                        {   // check to see if it is a number.
+                            if((waiger % 1) !== 0 || (waiger < 0 || waiger > maxBet))
+                            {  // Waiger is outside of allowed limits
+                                window.alert("Please enter an integer between 0 and " + maxBet);
+                            }
+                            else
+                            {  // Waiger is valid
+                                validWaiger = true;
+                                self.board.selectedCategory.selectedQuestion.value = maxBet;  // update the questions score
+                            }
+                        }
+                        else
+                        {
+                            window.alert("Please enter a valid number.");
+                        }
+                    }while(validWaiger === false);
+                }
+            }
             document.getElementById(outputId).textContent = self.board.selectedCategory.title; // display category
         }
         else 
@@ -576,6 +633,7 @@ GameController.prototype = {
         
         self.disableModeratorButtons();
         self.resetTimer();
+        self.isDD = false;
         
         var currentPlayer = self.getCurrentPlayer();
         currentPlayer.addSubtractScore(self.board.selectedCategory.selectedQuestion.value,
@@ -601,6 +659,7 @@ GameController.prototype = {
         
         self.disableModeratorButtons();
         self.resetTimer();
+        self.isDD = false;
         
         var currentPlayer = self.getCurrentPlayer();
         currentPlayer.addSubtractScore(0 - self.board.selectedCategory.selectedQuestion.value, 
@@ -638,6 +697,15 @@ GameController.prototype = {
         self.resetTimer();
         
         var currentPlayer = self.getCurrentPlayer();
+        
+        if (self.isDD) // if this is a daily double, points should be deducted on time expiration
+        {
+            currentPlayer.addSubtractScore(0 - self.board.selectedCategory.selectedQuestion.value, 
+                                       self.roundNumber); // subtract the value from the player's score 
+            self.updatePlayerScore(self.currentPlayerIndex);
+            
+            self.isDD = false;
+        }
         
         self.updateAnswer(); // show the correct answer
         
@@ -720,6 +788,34 @@ GameController.prototype = {
             self.playerList[i].tokens = 0;
             self.updatePlayerTokens(i);
         }
+    },
+    
+    setDailyDoubles: function()
+    {
+        
+        dailyDouble = new Array();  // reset the array
+        
+        
+        var catIndex = Math.floor(Math.random() * 6);
+        var qIndex = Math.floor(Math.random() * 5);
+        
+        
+        ddSquare = new Array();  // will hold the individual coordinates
+        ddSquare.push(catIndex);
+        ddSquare.push(qIndex);
+        
+        dailyDouble.push(ddSquare);  // Push coordinates onto dailyDouble array
+    
+        if(this.roundNumber === 2)
+        {
+            var catIndex = Math.floor(Math.random() * 6);
+            var qIndex = Math.floor(Math.random() * 5);
+            
+            ddSquare = new Array();  // will hold the individual coordinates
+            ddSquare.push(catIndex);
+            ddSquare.push(qIndex);
+            
+            dailyDouble.push(ddSquare);  // Push coordinates onto dailyDouble array
+        }
     }
 };
-

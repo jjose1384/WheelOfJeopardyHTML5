@@ -40,38 +40,86 @@ and open the template in the editor.
             
             async function addCat()
             {
-                var catTitle = document.getElementById("title").value;
-                var newCat = firebase.database().ref("/categories");
+                //Check to see if all information is entered in correctly
+                if(document.getElementById("title").value === null || document.getElementById("title").value === "" || document.getElementById("title").value === "Enter title")
+                { 
+                    window.alert("Please enter a title for the new category.");
+                }
+                else if(document.getElementById("q1").value === null || document.getElementById("q1").value === "" || document.getElementById("q1").value === "Enter question")
+                {
+                    window.alert("Please enter a question for question 1");
+                }
+                else if(document.getElementById("q2").value === null || document.getElementById("q2").value === "" || document.getElementById("q2").value === "Enter question")
+                {
+                    window.alert("Please enter a question for question 2");
+                }
+                else if(document.getElementById("q3").value === null || document.getElementById("q3").value === "" || document.getElementById("q3").value === "Enter question")
+                {
+                    window.alert("Please enter a question for question 3");
+                }
+                else if(document.getElementById("q4").value === null || document.getElementById("q4").value === "" || document.getElementById("q4").value === "Enter question")
+                {
+                    window.alert("Please enter a question for question 4");
+                }
+                else if(document.getElementById("q5").value === null || document.getElementById("q5").value === "" || document.getElementById("q5").value === "Enter question")
+                {
+                    window.alert("Please enter a question for question 5");
+                }
+                else if(document.getElementById("a1").value === null || document.getElementById("a1").value === "" || document.getElementById("a1").value === "Enter answer")
+                {
+                    window.alert("Please enter an answer for question 1");
+                }
+                else if(document.getElementById("a2").value === null || document.getElementById("a2").value === "" || document.getElementById("a2").value === "Enter answer")
+                {
+                    window.alert("Please enter an answer for question 2");
+                }
+                else if(document.getElementById("a3").value === null || document.getElementById("a3").value === "" || document.getElementById("a3").value === "Enter answer")
+                {
+                    window.alert("Please enter an answer for question 3");
+                }
+                else if(document.getElementById("a4").value === null || document.getElementById("a4").value === "" || document.getElementById("a4").value === "Enter answer")
+                {
+                    window.alert("Please enter an answer for question 4");
+                }
+                else if(document.getElementById("a5").value === null || document.getElementById("a5").value === "" || document.getElementById("a5").value === "Enter answer")
+                {
+                    window.alert("Please enter an answer for question 5");
+                }
+                else
+                {
+                    var catTitle = document.getElementById("title").value;
+                    var newCat = firebase.database().ref("/categories");
+                    
+                    newCat.child(catTitle).set({
+                        question1:
+                        {
+                            question: document.getElementById("q1").value,
+                            answer: document.getElementById("a1").value
+                        },
+                        question2:
+                        {
+                            question: document.getElementById("q2").value,
+                            answer: document.getElementById("a2").value
+                        },
+                        question3:
+                        {
+                            question: document.getElementById("q3").value,
+                            answer: document.getElementById("a3").value
+                        },
+                        question4:
+                        {
+                            question: document.getElementById("q4").value,
+                            answer: document.getElementById("a4").value
+                        },
+                        question5:
+                        {
+                            question: document.getElementById("q5").value,
+                            answer: document.getElementById("a5").value
+                        },
+                    });
                 
-                newCat.child(catTitle).set({
-                    question1:
-                    {
-                        question: document.getElementById("q1").value,
-                        answer: document.getElementById("a1").value
-                    },
-                    question2:
-                    {
-                        question: document.getElementById("q2").value,
-                        answer: document.getElementById("a2").value
-                    },
-                    question3:
-                    {
-                        question: document.getElementById("q3").value,
-                        answer: document.getElementById("a3").value
-                    },
-                    question4:
-                    {
-                        question: document.getElementById("q4").value,
-                        answer: document.getElementById("a4").value
-                    },
-                    question5:
-                    {
-                        question: document.getElementById("q5").value,
-                        answer: document.getElementById("a5").value
-                    },
-                });
-                
-                window.alert(catTitle + " added");
+                    window.alert(catTitle + " added");
+                }
             }
     </script>
     </head>
@@ -80,7 +128,7 @@ and open the template in the editor.
             <table border="1" cellpadding="3">
                 <thead>
                     <tr>
-                        <td align="center" border="0">
+                        <td align="center">
                             <img src="img/logo.jpg" width="300" height="150" alt="Wheel of Jeopardy"/>
                         </td>
                     </tr>
