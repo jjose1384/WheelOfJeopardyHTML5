@@ -5,9 +5,10 @@
  */
 
 // default game properties
-var gameTimerDefault = 5; // in seconds
+var gameTimerDefault = 15; // in seconds
 var spinsLeftDefault = 50;
 var questionsLeftDefault = 30;
+var dailyDouble;
 
 // fixed categories
 var category_bankrupt = "Bankrupt";
@@ -16,6 +17,7 @@ var category_freeTurn = "Free Turn";
 var category_spinAgain = "Spin Again";
 var category_playerChoice = "Player's Choice";
 var category_opponentChoice = "Opponent's Choice";
+var waiger = 0;
 
 function GameController(wheelParam, boardParam, playerListParam, categoryListParam, roundNumberParam)
 {
@@ -36,17 +38,20 @@ function GameController(wheelParam, boardParam, playerListParam, categoryListPar
     categoryListParam[9].title = category_spinAgain;
     categoryListParam[10].title = category_playerChoice;
     categoryListParam[11].title = category_opponentChoice; 
-
+    
+    
     this.board.setCategories(categoryListParam);
     
         
     this.shuffle(this.board.categoryTitleList);
     this.wheel.setLabels(this.board.categoryTitleList);
+    
 }
 
 GameController.prototype = {
     startGame: function ()
     {
+        this.setDailyDouble();
         this.setPlayerNames();
         this.updateSpinsLeft();
         this.updateCurrentPlayer();
@@ -129,15 +134,83 @@ GameController.prototype = {
     {
         var self = this;
         var outputId = "selectedQuestion";
+        var isDailyDouble = false;
+        var ddScore;
+        var validEntry = false;
+        var roundMax = 1000;
+        var messageText;
+        
         if (self.board.selectedCategory !== null)
         {
+            if(self.board.selectedCategoryIndex !== null)
+            {
+                for(var i = 0; i < dailyDouble.length; i++)
+                {  //  See if it is a daily double
+                    if(self.board.selectedCategoryIndex === dailyDouble[i][0] && self.board.selectedCategory.selectedQuestionIndex === dailyDouble[i][1])
+                    {  //  It is a daily double
+                        isDailyDouble = true;
+                    }
+                }
+                
+                if(isDailyDouble)
+                {
+                    if(this.roundNumber === 2)
+                    {  //  Can bet up to 2000 if your score is less than 2000 in round 2.
+                        roundMax = 2000;
+                    }
+                
+                    if(this.getCurrentPlayer().getScore(this.roundNumber) > roundMax)
+                    {  //  Update roundMax as appropriate.
+                        roundMax = this.getCurrentPlayer().getScore(this.roundNumber);
+                    }
+                
+                    do
+                    {
+                        //messageText = "Daily Double! " + this.getCurrentPlayer().name + ", you can waiger up to " + roundMax + ". Enter your waiger!"
+                        //self.dailyDoubleModalPopup(messageText);
+                        //ddScore = waiger;
+                        ddScore = window.prompt("Daily Double! " + this.getCurrentPlayer().name + ", you can waiger up to " + roundMax + ". Enter your waiger!","Waiger");
+                        
+                        try
+                        {
+                            ddScore = parseInt(ddScore);  //  Get the int
+                            
+                            if(parseInt(Number(ddScore)) === ddScore)
+                            {
+                                if(ddScore < 0 || ddScore > roundMax)
+                                {
+                                    //messageText = "Please enter a number between 0 and " + roundMax + ", inclusive.";
+                                    window.alert("Please enter a number between 0 and " + roundMax + ", inclusive.");
+                                }
+                                else
+                                {  // Score is valid
+                                    validEntry = true;
+                                }
+                            }
+                            else
+                            {  // Not a number
+                                //messageText = "Please enter a valid number."
+                                window.alert("Please enter a valid number.");
+                            }
+                        }
+                        catch(err)
+                        {
+                            //messageText = "Please enter a valid number."
+                            window.alert("Please enter a valid number.");
+                        }
+                    }while(validEntry === false);
+                
+                    self.board.selectedCategory.selectedQuestion.value = ddScore;   //  Set the value for this question.
+                }
+
+            }
+            
             document.getElementById(outputId).textContent = self.board.selectedCategory.selectedQuestion.questionText; // display question
         }
         else
         {
             document.getElementById(outputId).textContent = "";
-        }
-            
+        }            
     },
     
     // updates Answer text on the screen
@@ -524,6 +597,13 @@ GameController.prototype = {
         $("#messageModal").modal({backdrop: "static"});
     },
     
+    dailyDoubleModalPopup: function(message)
+    {   
+        document.getElementById("ddMessage").innerHTML = message;
+        
+        $("#dailyDoubleModal").modal({backdrop: "static"});
+    },
+    
     // end of round or game
     endOfRound: function()
     {
@@ -720,6 +800,44 @@ GameController.prototype = {
             self.playerList[i].tokens = 0;
             self.updatePlayerTokens(i);
         }
+    },
+    
+    // determine the daily double questions
+    setDailyDouble: function()
+    {
+        
+        //  Get random values for the category and question index
+       // var catIndex = Math.floor(Math.random() * 6);
+       // var qIndex = Math.floor(Math.random() * 5);
+       
+        var catIndex = 0;
+        var qIndex = 0;
+        dailyDouble = new Array();
+        
+        //  Save random values to an array.
+        var ddQuestion = new Array();
+        ddQuestion.push(catIndex);
+        ddQuestion.push(qIndex);
+        
+        dailyDouble.push(ddQuestion);
+        
+        if(this.roundNumber === 2)
+        {  //  Add a second one if it is round 2.
+            var catIndex = Math.floor(Math.random() * 6);
+            var qIndex = Math.floor(Math.random() * 5);
+        
+            ddQuestion = new Array();
+            ddQuestion.push(catIndex);
+            ddQuestion.push(qIndex);
+        
+            dailyDouble.push(ddQuestion);
+        }
+    },
+    
+    getWaiger: function()
+    {
+        waiger = document.getElementById("waigerAmount").value;
+        window.alert(waiger);
     }
 };
 
